@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  clang-format:
+  code-format:
     name: python, c++ format
     runs-on: ubuntu-latest
     steps:
