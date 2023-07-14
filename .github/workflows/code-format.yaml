@@ -1,4 +1,4 @@
-name: clang-format
+name: code-format
 on:
   push:
     branches:
@@ -9,7 +9,7 @@ on:
 
 jobs:
   clang-format:
-    name: clang-format
+    name: python, c++ format
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source code
@@ -17,3 +17,10 @@ jobs:
         
       - name: clang-format Check
         uses: jidicula/clang-format-action@v4.11.0
+        
+      - name: python / black formatter
+        uses: rickstaa/action-black@v1
+        with:
+          black_args: ". --check"
+     
+    
