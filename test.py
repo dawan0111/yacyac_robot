@@ -1,7 +1,11 @@
-import sys
+j = [1,
+     2,
+     3
+]
 
+a = "1323"
+b = '1233'
 
-a = 134
-
-
-print(a)
+if True and False:
+  print('hello')
+  print("hello")
