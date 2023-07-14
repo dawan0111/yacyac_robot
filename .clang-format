@@ -11,7 +11,7 @@ AllowShortLoopsOnASingleLine: false
 AlwaysBreakTemplateDeclarations: true
 AlwaysBreakAfterDefinitionReturnType: false
 BreakBeforeBinaryOperators: None
-BreakBeforeBraces: Custom
+BreakBeforeBraces: Stroustrup
 BraceWrapping:
   AfterEnum: true
   AfterStruct: true
