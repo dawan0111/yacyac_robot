@@ -21,7 +21,9 @@ find_package(rosidl_default_generators REQUIRED)
 rosidl_generate_interfaces(${PROJECT_NAME}_msgs
   "msg/Pose.msg"
   DEPENDENCIES std_msgs
+  LIBRARY_NAME ${PROJECT_NAME}
 )
+ament_export_dependencies(rosidl_default_runtime)
 
 # ament_target_dependencies(yacyac_ctrl
 #   "rclcpp"

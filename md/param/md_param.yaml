@@ -1,0 +1,16 @@
+md_ros2_param:
+  ros__parameters:
+    use_MDUI: 0
+    wheel_radius: 0.065
+    wheel_length: 0.454
+    motor_pole: 20 
+    reduction: 1 
+    reverse_direction: 0
+    maxrpm: 400
+    motor_posi: 0
+    encoder_PPR: 4096
+    position_proportion_gain: 20
+    speed_proportion_gain: 50
+    integral_gain: 1800
+    slow_start: 300
+    slow_down: 300 

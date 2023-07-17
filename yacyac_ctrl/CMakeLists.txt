@@ -10,6 +10,7 @@ find_package(ament_cmake REQUIRED)
 find_package(std_msgs REQUIRED)
 # find_package(rosidl_default_generators REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(yacyac_interface REQUIRED)
 
 # 헤더 파일 include
 # include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/insta360)
@@ -24,8 +25,9 @@ add_executable(yacyac_ctrl src/pub.cpp)
 # )
 
 ament_target_dependencies(yacyac_ctrl
-  "rclcpp"
-  "std_msgs"
+  rclcpp
+  std_msgs
+  yacyac_interface
 )
 
 install(TARGETS yacyac_ctrl DESTINATION lib/${PROJECT_NAME})
