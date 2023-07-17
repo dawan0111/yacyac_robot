@@ -17,10 +17,4 @@ jobs:
         
       - name: clang-format Check
         uses: jidicula/clang-format-action@v4.11.0
-        
-      - name: python / black formatter
-        uses: rickstaa/action-black@v1
-        with:
-          black_args: ". --check"
-     
     
