@@ -456,7 +456,7 @@ int main(int argc, char** argv)
 
     rclcpp::Rate r(1000); // Set the loop period -> 1ms.
     rclcpp::Time start_time = node->get_clock()->now();
-    rclcpp::Duration start_delay(1.5);
+    rclcpp::Duration start_delay(2, 0);
     double start_delay_sec = node->get_clock()->now().seconds();
 
     start_delay_sec += start_delay.seconds();
