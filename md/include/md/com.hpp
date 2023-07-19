@@ -1,3 +1,4 @@
+#include <cstdint>
 #define ID_ALL 0xfe
 #define MAX_PACKET_SIZE 26
 #define MAX_DATA_SIZE 21

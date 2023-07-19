@@ -1,8 +1,10 @@
+
 #include "md/global.hpp"
+#include "rclcpp/rclcpp.hpp"
+#include "tf2/LinearMath/Quaternion.h"
+#include <nav_msgs/msg/odometry.hpp>
 #include <stdint.h>
-
 #include <yacyac_interface/msg/pose.hpp>
-
 #define VELOCITY_CONSTANT_VALUE                                                                                                                                                                        \
     9.5492743 // 이동속도(m/min), v = 바퀴 둘레의 길이 x RPM
               // 이동속도(m/sec), v = (2 x 바퀴 반지름 x (pi / 60) x RPM)
@@ -20,6 +22,7 @@ static double robot_old_x;
 static double robot_old_y;
 static double robot_old_theta;
 
+extern nav_msgs::msg::Odometry robot_odom;
 extern yacyac_interface::msg::Pose robot_pose;
 
 void ResetOdom(void)
@@ -33,6 +36,16 @@ void ResetOdom(void)
     robot_pose.theta = 0.0;
     robot_pose.linear_velocity = 0.0;
     robot_pose.angular_velocity = 0.0;
+
+    robot_odom.header.frame_id = "odom";
+    robot_odom.child_frame_id = "base_link";
+    robot_odom.pose.pose.position.x = 0.0;
+    robot_odom.pose.pose.position.y = 0.0;
+    robot_odom.pose.pose.position.z = 0.0;
+    robot_odom.pose.pose.orientation.x = 0.0;
+    robot_odom.pose.pose.orientation.y = 0.0;
+    robot_odom.pose.pose.orientation.z = 0.0;
+    robot_odom.pose.pose.orientation.w = 1.0;
 }
 
 // RPM --> m/sec
@@ -160,6 +173,15 @@ void CalRobotPoseFromRPM(PID_PNT_MAIN_DATA_t* pData)
     robot_pose.theta = robot_curr_theta;
     robot_pose.linear_velocity = pVelocity[0];
     robot_pose.angular_velocity = pVelocity[1];
+
+    tf2::Quaternion quat;
+    quat.setRPY(0.0, 0.0, robot_curr_theta);
+    robot_odom.pose.pose.position.x = robot_curr_x;
+    robot_odom.pose.pose.position.y = robot_curr_y;
+    robot_odom.pose.pose.orientation.x = quat.x();
+    robot_odom.pose.pose.orientation.y = quat.y();
+    robot_odom.pose.pose.orientation.z = quat.z();
+    robot_odom.pose.pose.orientation.w = quat.w();
 }
 
 void CalRobotPoseFromPos(PID_PNT_MAIN_DATA_t* pData)
@@ -244,6 +266,15 @@ void CalRobotPoseFromPos(PID_PNT_MAIN_DATA_t* pData)
     robot_pose.theta = robot_curr_theta;
     robot_pose.linear_velocity = linear_vel;
     robot_pose.angular_velocity = angular_vel;
+
+    tf2::Quaternion quat;
+    quat.setRPY(0.0, 0.0, robot_curr_theta);
+    robot_odom.pose.pose.position.x = robot_curr_x;
+    robot_odom.pose.pose.position.y = robot_curr_y;
+    robot_odom.pose.pose.orientation.x = quat.x();
+    robot_odom.pose.pose.orientation.y = quat.y();
+    robot_odom.pose.pose.orientation.z = quat.z();
+    robot_odom.pose.pose.orientation.w = quat.w();
 }
 
 void CalRobotPose_old(PID_PNT_MAIN_DATA_t* pData)
@@ -324,4 +355,12 @@ void CalRobotPose_old(PID_PNT_MAIN_DATA_t* pData)
     robot_pose.theta = robot_curr_theta;
     robot_pose.linear_velocity = pVelocity[0];
     robot_pose.angular_velocity = pVelocity[1];
+    tf2::Quaternion quat;
+    quat.setRPY(0.0, 0.0, robot_curr_theta);
+    robot_odom.pose.pose.position.x = robot_curr_x;
+    robot_odom.pose.pose.position.y = robot_curr_y;
+    robot_odom.pose.pose.orientation.x = quat.x();
+    robot_odom.pose.pose.orientation.y = quat.y();
+    robot_odom.pose.pose.orientation.z = quat.z();
+    robot_odom.pose.pose.orientation.w = quat.w();
 }

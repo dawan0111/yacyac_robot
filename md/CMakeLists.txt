@@ -26,6 +26,8 @@ find_package(tf2 REQUIRED)
 find_package(nav_msgs REQUIRED)
 find_package(rclpy REQUIRED)
 find_package(yacyac_interface REQUIRED)
+find_package(tf2_ros REQUIRED)
+
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -43,7 +45,16 @@ include_directories(include)
 
 
 add_executable(md src/main.cpp)
-ament_target_dependencies(md rclcpp std_msgs yacyac_interface geometry_msgs tf2 nav_msgs sensor_msgs serial)
+ament_target_dependencies(md 
+  rclcpp 
+  std_msgs 
+  yacyac_interface 
+  geometry_msgs 
+  tf2 
+  nav_msgs 
+  sensor_msgs 
+  serial
+  )
 
 # install(DIRECTORY include/${PROJECT_NAME}/
 #   DESTINATION $share/${PROJECT_NAME}

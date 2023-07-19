@@ -1,13 +1,15 @@
-#include <geometry_msgs/msg/twist.hpp>
-#include <yacyac_interface/msg/pose.hpp>
-
 #include "com.cpp"
 #include "md/global.hpp"
-
+#include <geometry_msgs/msg/twist.hpp>
+#include <nav_msgs/msg/odometry.hpp>
 #include <rclcpp/rclcpp.hpp>
+#include <yacyac_interface/msg/pose.hpp>
 
 yacyac_interface::msg::Pose robot_pose;
 rclcpp::Publisher<yacyac_interface::msg::Pose>::SharedPtr robot_pose_pub;
+
+nav_msgs::msg::Odometry robot_odom;
+rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr robot_odom_pub;
 
 ROBOT_PARAMETER_t robotParamData;
 
@@ -357,6 +359,7 @@ int main(int argc, char** argv)
     auto reset_alarm_sub = node->create_subscription<std_msgs::msg::Bool>("reset_alarm", qos_profile, resetAlarmCallBack);
 
     robot_pose_pub = node->create_publisher<yacyac_interface::msg::Pose>("robot_pose", qos_profile);
+    robot_odom_pub = node->create_publisher<nav_msgs::msg::Odometry>("yacyac/odom", qos_profile);
 
     int16_t* pGoalRPMSpeed;
 
@@ -583,4 +586,5 @@ void PubRobotPose(void)
     robot_pose.right_motor_state = curr_pid_pnt_main_data.mtr_state_id2.val;
 
     robot_pose_pub->publish(robot_pose);
+    robot_odom_pub->publish(robot_odom);
 }
