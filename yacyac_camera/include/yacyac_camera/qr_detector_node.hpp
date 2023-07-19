@@ -15,7 +15,7 @@ public:
         RCLCPP_INFO(this->get_logger(), "QR DETECTOR NODE CREATE");
         scanner_.set_config(zbar::ZBAR_NONE, zbar::ZBAR_CFG_ENABLE, 1);
 
-        sub_ = this->create_subscription<sensor_msgs::msg::Image>(input_topic_name, rclcpp::SensorDataQoS(), std::bind(&QrDetectorNode::image_callback_, this, std::placeholders::_1));
+        this->create_subscription<sensor_msgs::msg::Image>(input_topic_name, rclcpp::SensorDataQoS(), std::bind(&QrDetectorNode::image_callback_, this, std::placeholders::_1));
 
         publisher_ = this->create_publisher<yacyac_interface::msg::Qrcode>(output, rclcpp::QoS(1));
 

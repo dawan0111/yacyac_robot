@@ -3,6 +3,7 @@
 #include <geometry_msgs/msg/twist.hpp>
 #include <nav_msgs/msg/odometry.hpp>
 #include <rclcpp/rclcpp.hpp>
+#include <tf2_ros/transform_broadcaster.h>
 #include <yacyac_interface/msg/pose.hpp>
 
 yacyac_interface::msg::Pose robot_pose;
@@ -10,6 +11,7 @@ rclcpp::Publisher<yacyac_interface::msg::Pose>::SharedPtr robot_pose_pub;
 
 nav_msgs::msg::Odometry robot_odom;
 rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr robot_odom_pub;
+std::shared_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster;
 
 ROBOT_PARAMETER_t robotParamData;
 
@@ -359,7 +361,9 @@ int main(int argc, char** argv)
     auto reset_alarm_sub = node->create_subscription<std_msgs::msg::Bool>("reset_alarm", qos_profile, resetAlarmCallBack);
 
     robot_pose_pub = node->create_publisher<yacyac_interface::msg::Pose>("robot_pose", qos_profile);
-    robot_odom_pub = node->create_publisher<nav_msgs::msg::Odometry>("yacyac/odom", qos_profile);
+    robot_odom_pub = node->create_publisher<nav_msgs::msg::Odometry>("/odom", 50);
+
+    tf_broadcaster = std::make_shared<tf2_ros::TransformBroadcaster>(node);
 
     int16_t* pGoalRPMSpeed;
 
@@ -584,6 +588,21 @@ void PubRobotPose(void)
 
     robot_pose.left_motor_state = curr_pid_pnt_main_data.mtr_state_id1.val;
     robot_pose.right_motor_state = curr_pid_pnt_main_data.mtr_state_id2.val;
+
+    // robot_pose.header.stamp = rclcpp::Clock().now();
+    robot_odom.header.stamp = rclcpp::Clock().now();
+
+    geometry_msgs::msg::TransformStamped tf_msg;
+    tf_msg.header.stamp = robot_odom.header.stamp;
+    tf_msg.header.frame_id = robot_odom.header.frame_id;
+    tf_msg.child_frame_id = robot_odom.child_frame_id;
+
+    tf_msg.transform.translation.x = robot_odom.pose.pose.position.x;
+    tf_msg.transform.translation.y = robot_odom.pose.pose.position.y;
+    tf_msg.transform.translation.z = 0.0;
+    tf_msg.transform.rotation = robot_odom.pose.pose.orientation;
+
+    tf_broadcaster->sendTransform(tf_msg);
 
     robot_pose_pub->publish(robot_pose);
     robot_odom_pub->publish(robot_odom);

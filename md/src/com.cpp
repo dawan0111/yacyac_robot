@@ -26,7 +26,7 @@ extern void PubRobotPose(void);
 int InitSerialComm(void)
 {
     try {
-        ser.setPort("/dev/ttyUSB0");
+        ser.setPort("/dev/ttyUSB1");
         ser.setBaudrate(robotParamData.nBaudrate);
         serial::Timeout to = serial::Timeout::simpleTimeout(1667); // 1667 when baud is 57600, 0.6ms
         ser.setTimeout(to);                                        // 2857 when baud is 115200, 0.35ms
@@ -80,6 +80,7 @@ int PutMdData(PID_CMD_t pid, uint16_t rmid, const uint8_t* pData, uint16_t lengt
     serial_comm_snd_buff[len++] = CalCheckSum(serial_comm_snd_buff, len);
 
     if (ser.isOpen() == true) {
+        // ser.flushInput();
         ser.write(serial_comm_snd_buff, len);
     }
 
