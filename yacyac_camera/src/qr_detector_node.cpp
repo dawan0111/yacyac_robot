@@ -7,8 +7,7 @@ int main(int argc, char** argv)
 
     std::shared_ptr<QrDetectorNode> qr_detector_node = nullptr;
     try {
-        qr_detector_node =
-            std::make_shared<QrDetectorNode>("/qr_code", "/yacyac_camera", "qr_detector_node");
+        qr_detector_node = std::make_shared<QrDetectorNode>("/qr_code", "/yacyac_camera", "qr_detector_node");
     }
     catch (const std::exception& e) {
         fprintf(stderr, "%s Exiting..\n", e.what());

@@ -11,9 +11,7 @@
 /// Images are annotated with this process's id as well as the message's ptr.
 class CameraNode final : public rclcpp::Node {
 public:
-    explicit CameraNode(const std::string& output, const std::string& node_name = "camera_node",
-                        const std::string& device = "/dev/video0", int width = 640,
-                        int height = 480)
+    explicit CameraNode(const std::string& output, const std::string& node_name = "camera_node", const std::string& device = "/dev/video0", int width = 640, int height = 480)
         : Node(node_name, rclcpp::NodeOptions().use_intra_process_comms(true)), canceled_(false)
     {
         // Initialize OpenCV
@@ -46,8 +44,7 @@ public:
                 continue;
             }
 
-            sensor_msgs::msg::Image::SharedPtr msg =
-                cv_bridge::CvImage(std_msgs::msg::Header(), "bgr8", frame_).toImageMsg();
+            sensor_msgs::msg::Image::SharedPtr msg = cv_bridge::CvImage(std_msgs::msg::Header(), "bgr8", frame_).toImageMsg();
             pub_->publish(*msg); // Publish.
         }
     }

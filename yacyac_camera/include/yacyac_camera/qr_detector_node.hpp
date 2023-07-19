@@ -10,21 +10,16 @@
 
 class QrDetectorNode final : public rclcpp::Node {
 public:
-    explicit QrDetectorNode(const std::string& node_name, const std::string& input_topic_name,
-                            const std::string& output)
-        : Node(node_name, rclcpp::NodeOptions().use_intra_process_comms(true))
+    explicit QrDetectorNode(const std::string& node_name, const std::string& input_topic_name, const std::string& output) : Node(node_name, rclcpp::NodeOptions().use_intra_process_comms(true))
     {
         RCLCPP_INFO(this->get_logger(), "QR DETECTOR NODE CREATE");
         scanner_.set_config(zbar::ZBAR_NONE, zbar::ZBAR_CFG_ENABLE, 1);
 
-        sub_ = this->create_subscription<sensor_msgs::msg::Image>(
-            input_topic_name, rclcpp::SensorDataQoS(),
-            std::bind(&QrDetectorNode::image_callback_, this, std::placeholders::_1));
+        sub_ = this->create_subscription<sensor_msgs::msg::Image>(input_topic_name, rclcpp::SensorDataQoS(), std::bind(&QrDetectorNode::image_callback_, this, std::placeholders::_1));
 
         publisher_ = this->create_publisher<yacyac_interface::msg::Qrcode>(output, rclcpp::QoS(1));
 
-        timer_ = this->create_wall_timer(std::chrono::milliseconds(100),
-                                         std::bind(&QrDetectorNode::publish_qr_, this));
+        timer_ = this->create_wall_timer(std::chrono::milliseconds(100), std::bind(&QrDetectorNode::publish_qr_, this));
     }
 
 private:
