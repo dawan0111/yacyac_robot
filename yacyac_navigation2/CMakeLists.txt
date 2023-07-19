@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(md)
+project(yacyac_navigation2)
 
 # Default to C99
 if(NOT CMAKE_C_STANDARD)
@@ -17,16 +17,16 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
-find_package(serial REQUIRED)
-find_package(rclcpp REQUIRED)
-find_package(sensor_msgs REQUIRED)
-find_package(std_msgs REQUIRED)
-find_package(geometry_msgs REQUIRED)
-find_package(tf2 REQUIRED)
-find_package(nav_msgs REQUIRED)
-find_package(rclpy REQUIRED)
-find_package(yacyac_interface REQUIRED)
-find_package(tf2_ros REQUIRED)
+find_package(yacyac_bringup REQUIRED)
+# uncomment the following section in order to fill in
+# further dependencies manually.
+# find_package(<dependency> REQUIRED)
+
+install(DIRECTORY
+  launch map param
+  DESTINATION share/${PROJECT_NAME}
+)
+
 
 
 if(BUILD_TESTING)
@@ -39,36 +39,5 @@ if(BUILD_TESTING)
   #set(ament_cmake_cpplint_FOUND TRUE)
   ament_lint_auto_find_test_dependencies()
 endif()
-
-include_directories(include)
-
-
-
-add_executable(md src/main.cpp)
-ament_target_dependencies(md 
-  rclcpp 
-  std_msgs 
-  yacyac_interface 
-  geometry_msgs 
-  tf2 
-  tf2_ros
-  nav_msgs 
-  sensor_msgs 
-  serial
-  )
-
-# install(DIRECTORY include/${PROJECT_NAME}/
-#   DESTINATION $share/${PROJECT_NAME}
-#   FILES_MATCHING PATTERN "*.hpp"
-# )
-
-install(TARGETS
-  md
-  DESTINATION lib/${PROJECT_NAME})
-
-install (DIRECTORY
-  launch param
-  DESTINATION share/${PROJECT_NAME}
-)
 
 ament_package()
