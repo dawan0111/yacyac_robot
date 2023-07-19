@@ -1,7 +1,4 @@
 #include "yacyac_camera/camera_node.hpp"
-
-#include <memory>
-
 #include "rclcpp/rclcpp.hpp"
 
 int main(int argc, char** argv)
@@ -10,7 +7,7 @@ int main(int argc, char** argv)
 
     std::shared_ptr<CameraNode> camera_node = nullptr;
     try {
-        camera_node = std::make_shared<CameraNode>("/yacyac_camera", "camera_node", "/dev/video2");
+        camera_node = std::make_shared<CameraNode>("/yacyac_camera", "camera_node", "/dev/video0");
     }
     catch (const std::exception& e) {
         fprintf(stderr, "%s Exiting..\n", e.what());

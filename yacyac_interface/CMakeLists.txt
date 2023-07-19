@@ -20,6 +20,7 @@ find_package(rosidl_default_generators REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}_msgs
   "msg/Pose.msg"
+  "msg/Qrcode.msg"
   DEPENDENCIES std_msgs
   LIBRARY_NAME ${PROJECT_NAME}
 )

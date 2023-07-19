@@ -6,12 +6,13 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 endif()
 
 include_directories(include)
-
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(cv_bridge REQUIRED)
 find_package(OpenCV REQUIRED)
+find_package(yacyac_interface REQUIRED)
+find_library(ZBAR_LIBRARIES NAMES zbar)
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
@@ -36,8 +37,35 @@ ament_target_dependencies(camera_node
   OpenCV
 )
 
+add_executable(qr_detector_node src/qr_detector_node.cpp)
+ament_target_dependencies(qr_detector_node
+  rclcpp
+  std_msgs
+  cv_bridge
+  OpenCV
+  yacyac_interface
+)
+target_link_libraries(qr_detector_node zbar)
+
+add_executable(camera_qr_pipeline src/camera_qr_pipeline.cpp)
+ament_target_dependencies(camera_qr_pipeline
+  rclcpp
+  std_msgs
+  cv_bridge
+  OpenCV
+  yacyac_interface
+)
+target_link_libraries(camera_qr_pipeline zbar)
+
 install(TARGETS
   camera_node
+  qr_detector_node
+  camera_qr_pipeline
   DESTINATION lib/${PROJECT_NAME})
+
+install (DIRECTORY
+  launch param
+  DESTINATION share/${PROJECT_NAME}
+)
 
 ament_package()
