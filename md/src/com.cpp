@@ -26,7 +26,7 @@ extern void PubRobotPose(void);
 int InitSerialComm(void)
 {
     try {
-        ser.setPort("/dev/ttyUSB1");
+        ser.setPort("/dev/yacyac/motor");
         ser.setBaudrate(robotParamData.nBaudrate);
         serial::Timeout to = serial::Timeout::simpleTimeout(1667); // 1667 when baud is 57600, 0.6ms
         ser.setTimeout(to);                                        // 2857 when baud is 115200, 0.35ms

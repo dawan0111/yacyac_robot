@@ -6,7 +6,6 @@ yacyac robot description
 $ sudo apt install libzbar-dev
 ```
 
-
 ## install & build
 
 ---
@@ -38,4 +37,20 @@ colcon build --symlink-install
 
 ```bash
 sudo apt install ros-galactic-cartographer-ros
+```
+
+### nav2
+
+```bash
+sudo apt-get install ros-galatic-nav2*
+```
+
+## robot setup
+
+---
+
+```bash
+chmod 0777 ros2_ws/src/yacyac/yacyac_setup/*
+cd ~/ros2_ws/src/yacyac/yacyac_setup
+sudo sh initenv.sh
 ```
