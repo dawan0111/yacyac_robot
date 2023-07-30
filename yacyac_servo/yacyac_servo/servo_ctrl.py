@@ -102,6 +102,8 @@ class ServoCtrl(Node):
         servo_list = list(msg.servo_list)
         for idx in range(len(servo_list)):
             self.control_position(idx, servo_list[idx])
+        for idx in range(len(servo_list)):
+            self.control_position(idx, servo_list[idx])
 
 
 def main(args=None):
