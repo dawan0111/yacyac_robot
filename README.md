@@ -33,6 +33,17 @@ git clone https://github.com/YDLIDAR/ydlidar_ros2_driver.git
 colcon build --symlink-install
 ```
 
+## Dynamixel
+
+### workbench install
+
+```bash
+
+cd ~/ros2_ws/src 
+git clone -b galactic_devel https://github.com/ROBOTIS-GIT/DynamixelSDK.git
+```
+
+
 ### cartographer
 
 ```bash
