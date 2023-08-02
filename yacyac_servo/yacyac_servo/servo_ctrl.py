@@ -23,14 +23,17 @@ class ServoCtrl(Node):
         self.cnt = 0
         # 목적 포지션 list
         self.position_set =  [0, 146, 292, 438, 584, 730, 876, 1022]
+        # 닫는 포지션 리스트 
+        self.close_position_set = [0, 292, 584, 876]
         # 방향 flag
         self.position_flag = [0, 0, 0, 0, 0, 0, 0, 0, 0]
         # 현재 포지션 index
         self.position_cnt =  [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        print ("init position...")
+        print ("init positioning...")
         for i in range(8):
             self.init_position(i)
             # self.reset_position(i+1)
+        print ("init positioning done!!!")
 
 
     def init_position(self, id):
@@ -44,11 +47,11 @@ class ServoCtrl(Node):
 
         if future.result() is not None:
             response = future.result()
-            print("present position id ", id, " : ", response.position)
+            
             closest_idx = 0
 
             min_diff = 10000
-            for i, val in enumerate(self.position_set):
+            for i, val in enumerate(self.close_position_set):
                 diff = abs(response.position - val)
                 if diff < min_diff:
                     min_diff = diff
@@ -56,17 +59,19 @@ class ServoCtrl(Node):
             
             cmd_pose = SetPosition()
             cmd_pose.id = id
-            cmd_pose.position = self.position_set[closest_idx]
-            
+            cmd_pose.position = self.close_position_set[closest_idx]
+            # 리스트의 요소값과 같은 값이 있으면 그 인덱스를 반환
+            for i, val in enumerate(self.position_set):
+                if val == cmd_pose.position:
+                    self.position_cnt[id] = i
+                    break
             # closest_idx이 중앙값을 넘는경우 
-            if closest_idx > 3:
+            if closest_idx > 2:
                 # 반시계 방향으로 돌아야함
                 self.position_flag[closest_idx] = 1
-                self.position_cnt[id] = closest_idx 
             else:
                 # 시계 방향으로 돌아야함
                 self.position_flag[closest_idx] = 0
-                self.position_cnt[id] = closest_idx
 
             self.pub.publish(cmd_pose)
             time.sleep(0.1)
@@ -75,13 +80,18 @@ class ServoCtrl(Node):
 
 
     def control_position(self, id, servo):
-        # 1번 서보 제어
-        flag = servo
-        print("position_cnt : ", self.position_cnt[id], " position_flag : ", self.position_flag[id])
-        if flag != 0:
-            # print("작동되는중")
+        # 제조할 약의 개수 
+        yac_num = servo * 2
+        # 배출한 약의 개수 
+        yac_cnt = 0
+        while yac_num != 0:
             # 포지션이 끝에 도달하면 방향을 바꿈
             # 역방향 진행
+            yac_num -= 1
+            yac_cnt += 1
+            # yac_cnt 
+            if yac_cnt % 2 == 0:
+                print(id, "번 약 ", servo, "개중 ", yac_cnt // 2, "개 배출중...")
             if self.position_flag[id] == 0:
                 cmd_pose = SetPosition()
                 self.position_cnt[id] -= 1
@@ -90,23 +100,22 @@ class ServoCtrl(Node):
                     self.position_flag[id] = 1
                 
                 cmd_pose.position = self.position_set[self.position_cnt[id]]
-                cmd_pose.id = id + 1
+                cmd_pose.id = id 
                 self.pub.publish(cmd_pose)
-                print("control servo id : ", id+1, " position : ", self.position_set[self.position_cnt[id]])
 
-            elif self.position_flag[id] == 1:
+            else :
                 cmd_pose = SetPosition()
                 self.position_cnt[id] += 1
-                if self.position_cnt[id] >= len(self.position_set):
-                    self.position_cnt[id] = len(self.position_set) - 2
+                if self.position_cnt[id] >= len(self.position_set)-1:
+                    self.position_cnt[id] = len(self.position_set) - 1
                     self.position_flag[id] = 0
                 
                 cmd_pose.position = self.position_set[self.position_cnt[id]]
-                cmd_pose.id = id + 1
+                cmd_pose.id = id 
                 self.pub.publish(cmd_pose)
-                print("control servo id : ", id+1, " position : ", self.position_set[self.position_cnt[id]])
-            else:
-                print("?")
+
+            time.sleep(0.5)
+        print(id, "번 약 배출이 완료되었습니다.")
   
     def reset_position(self, id):
         cmd_pose = SetPosition()
@@ -120,10 +129,9 @@ class ServoCtrl(Node):
         print("start position control")
         print("list : ", servo_list)
         for idx in range(len(servo_list)):
-            self.control_position(idx, servo_list[idx])
-        self.cnt += 1
-        print("cnt : ", self.cnt)
-        print("=====================================")
+            if servo_list[idx] != 0:
+                self.control_position(idx, servo_list[idx])
+        
 
 
 
