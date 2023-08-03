@@ -22,17 +22,19 @@ class ServoCtrl(Node):
         self.cmd_pose_id = Servo()
         self.cnt = 0
         # 목적 포지션 list
-        self.position_set =  [0, 146, 292, 438, 584, 730, 876, 1022]
-        # 닫는 포지션 리스트 
-        self.close_position_set = [0, 292, 584, 876]
+        # 1023 to 360 degree
+        # 시계방향으로 돌아가는 포지션 리스트
+        self.cw_position_set =  [0, 164, 328, 492, 656, 820] 
+        # 반 시계방향으로 돌아가는 포지션 리스트 
+        self.ccw_position_set = [915,751, 587,423, 259]
         # 방향 flag
         self.position_flag = [0, 0, 0, 0, 0, 0, 0, 0, 0]
         # 현재 포지션 index
         self.position_cnt =  [0, 0, 0, 0, 0, 0, 0, 0, 0]
         print ("init positioning...")
         for i in range(8):
-            self.init_position(i)
-            # self.reset_position(i+1)
+            # self.init_position(i)
+            self.reset_position(i)
         print ("init positioning done!!!")
 
 
@@ -81,7 +83,7 @@ class ServoCtrl(Node):
 
     def control_position(self, id, servo):
         # 제조할 약의 개수 
-        yac_num = servo * 2
+        yac_num = servo
         # 배출한 약의 개수 
         yac_cnt = 0
         while yac_num != 0:
@@ -92,35 +94,41 @@ class ServoCtrl(Node):
             # yac_cnt 
             if yac_cnt % 2 == 0:
                 print(id, "번 약 ", servo, "개중 ", yac_cnt // 2, "개 배출중...")
-            if self.position_flag[id] == 0:
+            if self.position_flag[id] == 1:
                 cmd_pose = SetPosition()
-                self.position_cnt[id] -= 1
-                if self.position_cnt[id] < 0:
-                    self.position_cnt[id] = 1
-                    self.position_flag[id] = 1
-                
-                cmd_pose.position = self.position_set[self.position_cnt[id]]
-                cmd_pose.id = id 
-                self.pub.publish(cmd_pose)
-
+                self.position_cnt[id] += 1
+                if self.position_cnt[id] >= len(self.ccw_position_set):
+                    self.position_cnt[id] = 0
+                    self.position_flag[id] = 0
+                    cmd_pose.position = self.cw_position_set[self.position_cnt[id]]
+                    cmd_pose.id = id
+                    self.pub.publish(cmd_pose)
+                else:    
+                    cmd_pose.position = self.ccw_position_set[self.position_cnt[id]]
+                    cmd_pose.id = id 
+                    self.pub.publish(cmd_pose)
             else :
                 cmd_pose = SetPosition()
                 self.position_cnt[id] += 1
-                if self.position_cnt[id] >= len(self.position_set)-1:
-                    self.position_cnt[id] = len(self.position_set) - 1
-                    self.position_flag[id] = 0
+                if self.position_cnt[id] >= len(self.cw_position_set):
+                    self.position_cnt[id] = 0
+                    self.position_flag[id] = 1
+                    cmd_pose.position = self.ccw_position_set[self.position_cnt[id]]
+                    cmd_pose.id = id
+                    self.pub.publish(cmd_pose)
+                else:    
+                    cmd_pose.position = self.cw_position_set[self.position_cnt[id]]
+                    cmd_pose.id = id 
+                    self.pub.publish(cmd_pose)
                 
-                cmd_pose.position = self.position_set[self.position_cnt[id]]
-                cmd_pose.id = id 
-                self.pub.publish(cmd_pose)
 
-            time.sleep(0.5)
+            time.sleep(1)
         print(id, "번 약 배출이 완료되었습니다.")
   
     def reset_position(self, id):
         cmd_pose = SetPosition()
         cmd_pose.id = id
-        cmd_pose.position = self.position_set[0]
+        cmd_pose.position = self.cw_position_set[0]
         self.pub.publish(cmd_pose)
         time.sleep(0.1)
 
