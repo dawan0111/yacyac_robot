@@ -12,6 +12,7 @@
 
   <depend>rclcpp</depend>
 	<depend>rclpy</depend>
+  <depend>rosbridge_server</depend>
   <!-- <depend>sllidar_ros2</depend> -->
   <!-- <depend>tracer_base</depend> -->
   <!-- <depend>insta360_node</depend> -->

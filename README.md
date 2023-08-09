@@ -4,6 +4,9 @@ yacyac robot description
 # Dependence Package
 ```bash
 $ sudo apt install libzbar-dev
+$ sudo apt install libzmq3-dev
+$ sudo apt install ros-${ROS_DISTRO}-rosbridge-server
+$ sudo apt install ros-${ROS_DISTRO}-image-transport
 ```
 
 ## install & build
