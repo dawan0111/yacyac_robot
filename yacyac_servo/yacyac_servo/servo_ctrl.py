@@ -33,8 +33,10 @@ class ServoCtrl(Node):
         self.position_cnt =  [0, 0, 0, 0, 0, 0, 0, 0, 0]
         print ("init positioning...")
         for i in range(8):
-            # self.init_position(i)
-            self.reset_position(i)
+            # 근처 포지션으로 이동합니다.
+            self.init_position(i)
+            # 원점 포지션으로 이동합니다. 
+            # self.reset_position(i)
         print ("init positioning done!!!")
 
 
@@ -49,36 +51,51 @@ class ServoCtrl(Node):
 
         if future.result() is not None:
             response = future.result()
-            
+            # print("response")
             closest_idx = 0
 
             min_diff = 10000
-            for i, val in enumerate(self.close_position_set):
+
+            
+            cmd_pose = SetPosition()
+            cmd_pose.id = id
+            flag = 0
+            for i, val in enumerate(self.cw_position_set):
                 diff = abs(response.position - val)
                 if diff < min_diff:
                     min_diff = diff
                     closest_idx = i
-            
-            cmd_pose = SetPosition()
-            cmd_pose.id = id
-            cmd_pose.position = self.close_position_set[closest_idx]
-            # 리스트의 요소값과 같은 값이 있으면 그 인덱스를 반환
-            for i, val in enumerate(self.position_set):
-                if val == cmd_pose.position:
-                    self.position_cnt[id] = i
-                    break
-            # closest_idx이 중앙값을 넘는경우 
-            if closest_idx > 2:
-                # 반시계 방향으로 돌아야함
-                self.position_flag[closest_idx] = 1
+                    cmd_pose.position = self.cw_position_set[closest_idx]
+                    flag = 1
+            for i, val in enumerate(self.ccw_position_set):
+                diff = abs(response.position - val)
+                if diff < min_diff:
+                    min_diff = diff
+                    closest_idx = i
+                    cmd_pose.position = self.ccw_position_set[closest_idx]
+                    flag = 0
+            if flag == 0:
+                self.position_flag[id] = 1
+                # print("cw")
             else:
-                # 시계 방향으로 돌아야함
-                self.position_flag[closest_idx] = 0
-
+                self.position_flag[id] = 0
+                # print("ccw")
+            # 리스트의 요소값과 같은 값이 있으면 그 인덱스를 반환
+            if flag: 
+                for i, val in enumerate(self.cw_position_set):
+                    if val == cmd_pose.position:
+                        self.position_cnt[id] = i
+                        break
+            else:
+                for i, val in enumerate(self.ccw_position_set):
+                    if val == cmd_pose.position:
+                        self.position_cnt[id] = i
+                        break
             self.pub.publish(cmd_pose)
             time.sleep(0.1)
         else:
             self.get_logger().info(f"Service call for ID {id} failed")
+
 
 
     def control_position(self, id, servo):
@@ -92,8 +109,8 @@ class ServoCtrl(Node):
             yac_num -= 1
             yac_cnt += 1
             # yac_cnt 
-            if yac_cnt % 2 == 0:
-                print(id, "번 약 ", servo, "개중 ", yac_cnt // 2, "개 배출중...")
+            
+            print(id, "번 약 ", servo, "개중 ", yac_cnt, "개 배출중...")
             if self.position_flag[id] == 1:
                 cmd_pose = SetPosition()
                 self.position_cnt[id] += 1
