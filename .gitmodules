@@ -1,0 +1,24 @@
+[submodule "ydlidar_ros2_driver"]
+	path = ydlidar_ros2_driver
+	url = https://github.com/YDLIDAR/ydlidar_ros2_driver.git
+	branch = master
+	
+[submodule "DynamixelSDK"]
+	path = DynamixelSDK
+	url = https://github.com/ROBOTIS-GIT/DynamixelSDK.git
+	branch = galactic_devel
+	
+[submodule "vision_opencv"]
+	path = vision_opencv
+	url = https://github.com/ros-perception/vision_opencv.git
+	branch = galactic
+	
+[submodule "BehaviorTree.CPP"]
+	path = BehaviorTree.CPP
+	url = https://github.com/BehaviorTree/BehaviorTree.CPP.git
+	branch = master
+	
+[submodule "witmotion_ros"]
+	path = witmotion_ros
+	url = https://github.com/ElettraSciComp/witmotion_IMU_ros.git
+	branch = ros2
