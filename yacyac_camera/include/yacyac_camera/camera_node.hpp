@@ -6,6 +6,7 @@
 #include <opencv2/opencv.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/image.hpp>
+#include "image_transport/image_transport.hpp"
 
 /// Node which captures images from a camera using OpenCV and publishes them.
 /// Images are annotated with this process's id as well as the message's ptr.
@@ -16,6 +17,7 @@ public:
     {
         // Initialize OpenCV
         cap_.open(device);
+        RCLCPP_INFO(this->get_logger(), "CameraNodeStart");
 
         cap_.set(cv::CAP_PROP_FRAME_WIDTH, static_cast<double>(width));
         cap_.set(cv::CAP_PROP_FRAME_HEIGHT, static_cast<double>(height));
@@ -23,8 +25,11 @@ public:
         if (!cap_.isOpened()) {
             throw std::runtime_error("Could not open video stream!");
         }
+         
+        image_transport::ImageTransport it(std::shared_ptr<CameraNode>(this, [](auto *) {}));
+        pub_ = it.advertise(output, 1);
         // Create a publisher on the output topic.
-        pub_ = this->create_publisher<sensor_msgs::msg::Image>(output, rclcpp::SensorDataQoS());
+        // pub_ = this->create_publisher<sensor_msgs::msg::Image>(output, rclcpp::SensorDataQoS());
         thread_ = std::thread(std::bind(&CameraNode::loop, this));
     }
 
@@ -45,12 +50,12 @@ public:
             }
 
             sensor_msgs::msg::Image::SharedPtr msg = cv_bridge::CvImage(std_msgs::msg::Header(), "bgr8", frame_).toImageMsg();
-            pub_->publish(*msg); // Publish.
+            pub_.publish(msg); // Publish.
         }
     }
 
 private:
-    rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr pub_;
+    image_transport::Publisher pub_;
     std::thread thread_;
     std::atomic<bool> canceled_;
     bool watermark_;

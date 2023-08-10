@@ -1,0 +1,12 @@
+<root BTCPP_format="4">
+
+    <BehaviorTree ID="MainTree">
+        <Sequence>
+            <Fallback>
+                <QRClient />
+                <Message message="QR no detected" />
+            </Fallback>
+            <Message message="QR detected" />
+        </Sequence>
+    </BehaviorTree>
+</root>
