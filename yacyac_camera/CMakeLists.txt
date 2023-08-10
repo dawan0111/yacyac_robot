@@ -9,6 +9,7 @@ include_directories(include)
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(image_transport REQUIRED)
 find_package(cv_bridge REQUIRED)
 find_package(OpenCV REQUIRED)
 find_package(yacyac_interface REQUIRED)
@@ -35,6 +36,7 @@ ament_target_dependencies(camera_node
   std_msgs
   cv_bridge
   OpenCV
+  image_transport
 )
 
 add_executable(qr_detector_node src/qr_detector_node.cpp)
@@ -44,6 +46,7 @@ ament_target_dependencies(qr_detector_node
   cv_bridge
   OpenCV
   yacyac_interface
+  image_transport
 )
 target_link_libraries(qr_detector_node zbar)
 
@@ -54,6 +57,7 @@ ament_target_dependencies(camera_qr_pipeline
   cv_bridge
   OpenCV
   yacyac_interface
+  image_transport
 )
 target_link_libraries(camera_qr_pipeline zbar)
 
