@@ -32,7 +32,7 @@ inline Pose2D convertFromString(StringView key)
         throw BT::RuntimeError("invalid input)");
     }
     else {
-        Pose\\\\\2D output;
+        Pose2D output;
 
         output.x = convertFromString<double>(parts[0]);
         output.y = convertFromString<double>(parts[1]);
@@ -65,7 +65,7 @@ public:
             return BT::NodeStatus::FAILURE;
         }
         // Take the goal from the InputPort of the Node
-        Pose2 goal;
+        Pose2D goal;
         if (!getInput<Pose2D>("goal", goal)) {
             // if I can't get this, there is something wrong with your BT.
             // For this reason throw an exception instead of returning FAILURE

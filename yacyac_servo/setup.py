@@ -23,6 +23,7 @@ setup(
     entry_points={
         'console_scripts': [
             'servo_ctrl = yacyac_servo.servo_ctrl:main',
+            'action_servo_ctrl = yacyac_servo.action_servo_ctrl:main',
         ],
     },
 )

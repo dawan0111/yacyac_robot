@@ -1,9 +1,13 @@
+from typing import Optional
 import rclpy as rp
 import time as time
+from rclpy.executors import Executor
 
 from rclpy.node import Node
+from rclpy.action import ActionServer
 
 from yacyac_interface.msg import Servo
+from yacyac_interface.action import Supply as SupplyAction
 from dynamixel_sdk_custom_interfaces.msg import SetPosition
 from dynamixel_sdk_custom_interfaces.srv import GetPosition
 
@@ -16,7 +20,7 @@ class ServoCtrl(Node):
     def __init__(self):
         super().__init__("servo_ctrl")
         # 약 개수 입력받음 -> 이걸 서비스 콜로 받아야함
-        self.sub = self.create_subscription(Servo, "/yacyac/servo", self.callback_yac, 10)
+        self._action_server = ActionServer(self, SupplyAction, "yacyac/supply_action", self.execute_callback)
         # 해당 포지션으로 다이나믹셀의 포지션을 이동시킴
         self.pub = self.create_publisher(SetPosition, "/set_position", 20)
         # 현재 포지션을 서비스 클라이언트로 받아옴 
@@ -34,13 +38,44 @@ class ServoCtrl(Node):
         self.position_flag = [0, 0, 0, 0, 0, 0, 0, 0, 0]
         # 현재 포지션 index
         self.position_cnt =  [0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+
+
+        # 현재 약 배출 개수 
+        self.yac_cnt = 0
+
         print ("init positioning...")
-        for i in range(8):
-            # 근처 포지션으로 이동합니다.
-            self.init_position(i)
-            # 원점 포지션으로 이동합니다. 
-            # self.reset_position(i)
+        # for i in range(8):
+        #     # 근처 포지션으로 이동합니다.
+        #     self.init_position(i)
+        #     # 원점 포지션으로 이동합니다. 
+        #     # self.reset_position(i)
         print ("init positioning done!!!")
+
+
+    def execute_callback(self, goal_handle):
+        print('제조 정보를 입력 받았습니다...')
+
+        supply_list = list(goal_handle.request.supply_list)
+        print("약 제조 리스트")
+        print("list : ", supply_list)
+        
+        yac_sum = sum(supply_list)
+        for idx in range(len(supply_list)):
+            if supply_list[idx] != 0:
+                self.control_position(idx, supply_list[idx], goal_handle)
+
+        goal_handle.succeed()
+
+        result = SupplyAction.Result()
+        print(yac_sum)
+        result.sequence = int(yac_sum)
+        print('총 ', yac_sum, '개의 약을 제조했습니다.')
+        # print('Result: {0}'.format(result.sequence))
+
+        return result
+
+
 
 
     def init_position(self, id):
@@ -101,7 +136,7 @@ class ServoCtrl(Node):
 
 
 
-    def control_position(self, id, servo):
+    def control_position(self, id, servo, goal_handle):
         # 제조할 약의 개수 
         yac_num = servo
         # 배출한 약의 개수 
@@ -112,8 +147,12 @@ class ServoCtrl(Node):
             yac_num -= 1
             yac_cnt += 1
             # yac_cnt 
-            
             print(id, "번 약 ", servo, "개중 ", yac_cnt, "개 배출중...")
+            feedback_msg = SupplyAction.Feedback()
+            self.yac_cnt += 1
+            feedback_msg.partial_sequence.append(self.yac_cnt)
+            goal_handle.publish_feedback(feedback_msg)
+            # self.get_logger().info('Feedback: {0}'.format(feedback_msg.partial_sequence))
             if self.position_flag[id] == 1:
                 cmd_pose = SetPosition()
                 self.position_cnt[id] += 1
@@ -143,8 +182,10 @@ class ServoCtrl(Node):
                 
 
             time.sleep(1)
+            
         print(id, "번 약 배출이 완료되었습니다.")
-  
+
+        
     def reset_position(self, id):
         cmd_pose = SetPosition()
         cmd_pose.id = id
@@ -152,14 +193,6 @@ class ServoCtrl(Node):
         self.pub.publish(cmd_pose)
         time.sleep(0.1)
 
-    def callback_yac(self, msg):
-        servo_list = list(msg.servo_list)
-        print("start position control")
-        print("list : ", servo_list)
-        for idx in range(len(servo_list)):
-            if servo_list[idx] != 0:
-                self.control_position(idx, servo_list[idx])
-        
 
 
 
