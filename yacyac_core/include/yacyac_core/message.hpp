@@ -6,7 +6,7 @@
 class Message : public BT::SyncActionNode {
 public:
     Message(const std::string& name, const BT::NodeConfig& config) : BT::SyncActionNode(name, config) {}
-    ~Message() {};
+    ~Message(){};
 
     static BT::PortsList providedPorts()
     {
@@ -15,6 +15,7 @@ public:
     }
 
     BT::NodeStatus tick() override;
+
 private:
 };
 
