@@ -22,6 +22,7 @@ int main(int argc, char** argv)
     bt_xml = packagePath + "/bt_xml/" + bt_xml;
     RCLCPP_INFO(nh->get_logger(), "Loading XML : %s", bt_xml.c_str());
     // RCLCPP_INFO(nh->get_logger(), "Loading XML : %s", bt_xml.c_str());
+
     // std::cout << "start" << std::endl;
     // We use the BehaviorTreeFactory to register our custom nodes
 
