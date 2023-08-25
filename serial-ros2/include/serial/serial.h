@@ -79,7 +79,10 @@ struct Timeout {
 #ifdef max
 #undef max
 #endif
-    static uint32_t max() { return std::numeric_limits<uint32_t>::max(); }
+    static uint32_t max()
+    {
+        return std::numeric_limits<uint32_t>::max();
+    }
     /*!
      * Convenience function to generate Timeout structs using a
      * single absolute timeout.
@@ -89,7 +92,10 @@ struct Timeout {
      *
      * \return Timeout struct that represents this simple timeout provided.
      */
-    static Timeout simpleTimeout(uint32_t timeout) { return Timeout(max(), timeout, 0, timeout, 0); }
+    static Timeout simpleTimeout(uint32_t timeout)
+    {
+        return Timeout(max(), timeout, 0, timeout, 0);
+    }
 
     /*! Number of milliseconds between bytes received to timeout on. */
     uint32_t inter_byte_timeout;
@@ -636,9 +642,15 @@ public:
     virtual ~IOException() throw() {}
     IOException(const IOException& other) : line_(other.line_), e_what_(other.e_what_), errno_(other.errno_) {}
 
-    int getErrorNumber() const { return errno_; }
+    int getErrorNumber() const
+    {
+        return errno_;
+    }
 
-    virtual const char* what() const throw() { return e_what_.c_str(); }
+    virtual const char* what() const throw()
+    {
+        return e_what_.c_str();
+    }
 };
 
 class PortNotOpenedException : public std::exception {
