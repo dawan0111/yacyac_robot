@@ -17,6 +17,7 @@ find_package(rclcpp REQUIRED)
 find_package(rclcpp_action REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(behaviortree_cpp REQUIRED)
+find_package(nav2_behavior_tree REQUIRED)
 find_package(nav2_msgs REQUIRED)
 
 find_package(sensor_msgs REQUIRED)
@@ -34,6 +35,7 @@ set(DEPENDENCIES
   geometry_msgs
   nav2_msgs
   behaviortree_cpp
+  nav2_behavior_tree
   yacyac_interface
   ${OTHER_DEPS}
 )  
@@ -69,7 +71,7 @@ add_executable(bt_ros2
 add_executable(${PROJECT_NAME} src/main.cpp)
 
 ament_target_dependencies(${PROJECT_NAME}_lib
-  rclcpp std_msgs behaviortree_cpp yacyac_interface nav2_msgs
+  rclcpp std_msgs behaviortree_cpp yacyac_interface nav2_behavior_tree nav2_msgs
 )
 
 ament_target_dependencies(send_goal rclcpp std_msgs rclcpp_action geometry_msgs nav2_msgs yacyac_interface)
