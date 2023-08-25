@@ -1,0 +1,5 @@
+uint8[8] yac_supply_list  
+---
+uint8 sequence
+---
+uint8[] partial_sequence

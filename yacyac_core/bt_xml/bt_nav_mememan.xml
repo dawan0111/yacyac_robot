@@ -1,0 +1,26 @@
+<root main_tree_to_execute = "MainTree">
+    <BehaviorTree ID="MainTree">
+    <!-- 반복횟수 -->
+        <Repeat num_cycles="3">
+            <Sequence>
+                <SubTree ID="MoveRobot"/>
+            </Sequence>
+
+        </Repeat>
+    </BehaviorTree>
+
+
+    <BehaviorTree ID="MoveRobot">
+        <Sequence>
+            <SetBlackboard output_key="Goal_a" value="-0.579;-1.341;0.0;1.0" />
+            <SetBlackboard output_key="Goal_b" value="5.214;-1.533;0.0;1.0" />
+            <SetBlackboard output_key="Goal_c" value="-1.588;1.253;0.0;1.0" />
+        
+            <Sequence name="SetGoal">
+                <Nav2Client goal="{Goal_a}" />
+                <Nav2Client goal="{Goal_b}" />
+                <Nav2Client goal="{Goal_c}" />
+            </Sequence>
+        </Sequence>
+    </BehaviorTree>
+</root>

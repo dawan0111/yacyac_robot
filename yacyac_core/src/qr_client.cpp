@@ -1,15 +1,15 @@
 #include "yacyac_core/qr_client.hpp"
 
-QRClient::QRClient(const std::string& name, const BT::NodeConfig& config) : BT::StatefulActionNode(name, config) {
+QRClient::QRClient(const std::string& name, const BT::NodeConfig& config) : BT::StatefulActionNode(name, config)
+{
     node_ = rclcpp::Node::make_shared("qr_client");
     std::string QR_topic_name = "/qr_codes";
-
-    qr_sub_ = node_->create_subscription<yacyac_interface::msg::Qrcode>(QR_topic_name, rclcpp::QoS(1), std::bind(&QRClient::QR_callback_, this, std::placeholders::_1));
+    node_->create_subscription<yacyac_interface::msg::Qrcode>(QR_topic_name, rclcpp::QoS(1), std::bind(&QRClient::QR_callback_, this, std::placeholders::_1));
 }
 
 QRClient::~QRClient()
 {
-    RCLCPP_INFO(node_->get_logger(),"SHUTTING DOWN QR NODE");
+    RCLCPP_INFO(node_->get_logger(), "SHUTTING DOWN QR NODE");
 }
 
 BT::NodeStatus QRClient::onStart()
@@ -42,9 +42,8 @@ BT::NodeStatus QRClient::onRunning()
 
 void QRClient::onHalted()
 {
-//   printf("[ QRClient: ABORTED ]");
+    //   printf("[ QRClient: ABORTED ]");
 }
-
 
 void QRClient::QR_callback_(const yacyac_interface::msg::Qrcode::ConstSharedPtr& msg)
 {

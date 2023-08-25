@@ -23,6 +23,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}_msgs
   "msg/Qrcode.msg"
   "msg/Servo.msg"
   "srv/TTS.srv"
+  "action/Supply.action"
   DEPENDENCIES std_msgs
   LIBRARY_NAME ${PROJECT_NAME}
 )

@@ -11,10 +11,10 @@ from launch.substitutions import ThisLaunchFileDir
 
 def generate_launch_description():
     # s2lidar package
-    # g2lidar_prefix = get_package_share_directory("ydlidar_ros2_driver")
-    # start_g2lidar_cmd = IncludeLaunchDescription(
-    #     PythonLaunchDescriptionSource(os.path.join(g2lidar_prefix, "launch", "ydlidar_launch.py"))
-    # )
+    g2lidar_prefix = get_package_share_directory("ydlidar_ros2_driver")
+    start_g2lidar_cmd = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(os.path.join(g2lidar_prefix, "launch", "ydlidar_launch.py"))
+    )
 
     # tracer mini package
     yacyac_prefix = get_package_share_directory("md")
@@ -22,16 +22,16 @@ def generate_launch_description():
         PythonLaunchDescriptionSource(os.path.join(yacyac_prefix, "launch", "md.launch.py"))
     )
 
-    # tracer mini package
-    yacyac_camera_prefix = get_package_share_directory("yacyac_camera")
-    start_yacyac_camera_cmd = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(os.path.join(yacyac_camera_prefix, "launch", "camera.launch.py"))
-    )
+    # # tracer mini package
+    # yacyac_camera_prefix = get_package_share_directory("yacyac_camera")
+    # start_yacyac_camera_cmd = IncludeLaunchDescription(
+    #     PythonLaunchDescriptionSource(os.path.join(yacyac_camera_prefix, "launch", "camera.launch.py"))
+    # )
 
-    # rosbridge websocket cmd
-    start_web_bridge_cmd = ExecuteProcess(
-        cmd=["ros2", "launch", "rosbridge_server", "rosbridge_websocket_launch.xml"], output="screen"
-    )
+    # # rosbridge websocket cmd
+    # start_web_bridge_cmd = ExecuteProcess(
+    #     cmd=["ros2", "launch", "rosbridge_server", "rosbridge_websocket_launch.xml"], output="screen"
+    # )
 
     # start_insta360_cmd = ExecuteProcess(
     #     cmd=["ros2", "run", "insta360_node", "insta360_node"], output="screen"
@@ -79,9 +79,9 @@ def generate_launch_description():
         [
             base_to_laser_publisher,
             base_to_imu_publisher,
-            # start_g2lidar_cmd,
+            start_g2lidar_cmd,
             start_yacyac_cmd,
-            start_web_bridge_cmd,
-            start_yacyac_camera_cmd
+            # start_web_bridge_cmd,
+            # start_yacyac_camera_cmd
         ]
     )
