@@ -17,7 +17,7 @@ QRClient::~QRClient()
 
 BT::NodeStatus QRClient::onStart()
 {
-    double life_time = rclcpp::Duration(30, 0).seconds();
+    double life_time = rclcpp::Duration(3, 0).seconds();
     deadline_ = node_->get_clock()->now().seconds() + life_time;
 
     auto message = std_msgs::msg::Int8();
@@ -32,7 +32,7 @@ BT::NodeStatus QRClient::onRunning()
     // rclcpp::spin_some(node_);
     if (node_->get_clock()->now().seconds() <= deadline_) {
         int8_t detected_QR_length = detected_QR_.size();
-        RCLCPP_INFO(node_->get_logger(), "detected qr length: %d", detected_QR_length);
+        // RCLCPP_INFO(node_->get_logger(), "detected qr length: %d", detected_QR_length);
 
         if (detected_QR_length == 1) {
             return BT::NodeStatus::SUCCESS;
