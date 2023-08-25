@@ -3,8 +3,11 @@
 QRClient::QRClient(const std::string& name, const BT::NodeConfig& config) : BT::StatefulActionNode(name, config)
 {
     node_ = rclcpp::Node::make_shared("qr_client");
-    std::string QR_topic_name = "/qr_codes";
+    const std::string QR_topic_name = "/qr_codes";
+    const std::string mode_topic_name = "/mode";
     node_->create_subscription<yacyac_interface::msg::Qrcode>(QR_topic_name, rclcpp::QoS(1), std::bind(&QRClient::QR_callback_, this, std::placeholders::_1));
+
+    mode_publisher_ = node_->create_publisher<std_msgs::msg::Int8>(mode_topic_name, rclcpp::QoS(1).best_effort());
 }
 
 QRClient::~QRClient()
@@ -14,8 +17,12 @@ QRClient::~QRClient()
 
 BT::NodeStatus QRClient::onStart()
 {
-    double life_time = rclcpp::Duration(10, 0).seconds();
+    double life_time = rclcpp::Duration(30, 0).seconds();
     deadline_ = node_->get_clock()->now().seconds() + life_time;
+
+    auto message = std_msgs::msg::Int8();
+    message.data = 1;
+    mode_publisher_->publish(message);
 
     return BT::NodeStatus::RUNNING;
 }

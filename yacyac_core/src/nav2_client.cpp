@@ -13,6 +13,7 @@
 #include "geometry_msgs/msg/quaternion.hpp"
 #include "nav2_msgs/action/navigate_to_pose.hpp"
 #include "std_msgs/msg/header.hpp"
+#include <std_msgs/msg/int8.hpp>
 #include "tf2/LinearMath/Quaternion.h"
 #include "tf2/transform_datatypes.h"
 #include "tf2_geometry_msgs/tf2_geometry_msgs.h"
@@ -56,8 +57,14 @@ public:
     virtual BT::NodeStatus tick() override
     {
         std::cout << "nav2 client tick" << std::endl;
+        const std::string mode_topic_name = "/mode";
+
         node_ = rclcpp::Node::make_shared("nav2_client");
         auto action_client = rclcpp_action::create_client<nav2_msgs::action::NavigateToPose>(node_, "navigate_to_pose");
+
+        auto mode_publisher = node_->create_publisher<std_msgs::msg::Int8>(mode_topic_name, rclcpp::QoS(1).best_effort());
+
+        mode_publisher->publish(0);
         // if no server is present, fail after 5 seconds
         std::cout << "nav2 server wait" << std::endl;
         if (!action_client->wait_for_action_server(std::chrono::seconds(20))) {
