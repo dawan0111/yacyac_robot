@@ -1,4 +1,7 @@
 #include "nav2_client.cpp"
+#include "yac_supply_client.cpp"
+#include "yacyac_core/message.hpp"
+#include "yacyac_core/qr_client.hpp"
 
 #include "rclcpp/rclcpp.hpp"
 #include "rclcpp_action/rclcpp_action.hpp"
@@ -16,7 +19,9 @@ int main(int argc, char** argv)
     const std::string packagePath = ament_index_cpp::get_package_share_directory("yacyac_core");
 
     auto nh = rclcpp::Node::make_shared("yacyac_core");
-    nh->declare_parameter("bt_xml", "bt_nav_mememan.xml");
+    // nh->declare_parameter("bt_xml", "bt_nav_mememan.xml");
+    // nh->declare_parameter("bt_xml", "bt_yac_supply.xml");
+    nh->declare_parameter("bt_xml", "bt_nav_yac_supply.xml");
     std::string bt_xml;
     nh->get_parameter("bt_xml", bt_xml);
     bt_xml = packagePath + "/bt_xml/" + bt_xml;
@@ -30,6 +35,9 @@ int main(int argc, char** argv)
 
     // RCLCPP_INFO(nh->get_logger(), "Loading XML : %s", bt_xml.c_str());
     factory.registerNodeType<Nav2Client>("Nav2Client");
+    factory.registerNodeType<YacSupplyCilent>("YacSupplyCilent");
+    factory.registerNodeType<QRClient>("QRClient");
+    factory.registerNodeType<Message>("Message");
 
     // Trees are created at deployment-time (i.e. at run-time, but only once at
     // the beginning). The currently supported format is XML. IMPORTANT: when the

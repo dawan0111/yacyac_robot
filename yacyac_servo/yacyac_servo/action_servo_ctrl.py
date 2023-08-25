@@ -56,7 +56,7 @@ class ServoCtrl(Node):
     def execute_callback(self, goal_handle):
         print('제조 정보를 입력 받았습니다...')
 
-        supply_list = list(goal_handle.request.supply_list)
+        supply_list = list(goal_handle.request.yac_supply_list)
         print("약 제조 리스트")
         print("list : ", supply_list)
         

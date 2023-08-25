@@ -36,6 +36,7 @@ set(DEPENDENCIES
   nav2_behavior_tree
   nav2_msgs
   behaviortree_cpp
+  yacyac_interface
   ${OTHER_DEPS}
 )  
 
@@ -73,7 +74,7 @@ ament_target_dependencies(${PROJECT_NAME}_lib
   rclcpp std_msgs behaviortree_cpp yacyac_interface nav2_behavior_tree nav2_msgs
 )
 
-ament_target_dependencies(send_goal rclcpp std_msgs rclcpp_action geometry_msgs nav2_msgs)
+ament_target_dependencies(send_goal rclcpp std_msgs rclcpp_action geometry_msgs nav2_msgs yacyac_interface)
 
 target_link_libraries(${PROJECT_NAME} ${PROJECT_NAME}_lib)
 target_link_libraries(bt_ros2 ${PROJECT_NAME}_lib)

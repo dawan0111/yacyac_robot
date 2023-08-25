@@ -1,4 +1,4 @@
-uint8[8] supply_list  
+uint8[8] yac_supply_list  
 ---
 uint8 sequence
 ---
