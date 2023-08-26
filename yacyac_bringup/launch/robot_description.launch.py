@@ -10,7 +10,7 @@ from launch.substitutions import ThisLaunchFileDir
 
 
 def generate_launch_description():
-    # s2lidar package
+    # g2lidar package
     g2lidar_prefix = get_package_share_directory("ydlidar_ros2_driver")
     start_g2lidar_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(g2lidar_prefix, "launch", "ydlidar_launch.py"))
@@ -24,6 +24,11 @@ def generate_launch_description():
     yacyac_camera_prefix = get_package_share_directory("yacyac_camera")
     start_yacyac_camera_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(yacyac_camera_prefix, "launch", "camera.launch.py"))
+    )
+
+    yacyac_servo_prefix = get_package_share_directory("yacyac_servo")
+    start_yacyac_servo_cmd = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(os.path.join(yacyac_servo_prefix, "launch", "yacyac_servo.launch.py"))
     )
 
 
@@ -77,6 +82,7 @@ def generate_launch_description():
             start_yacyac_cmd,
             start_web_bridge_cmd,
             start_yacyac_camera_cmd,
+            start_yacyac_servo_cmd,
             
             Node(
                 package="yacyac_io",
