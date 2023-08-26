@@ -2,6 +2,7 @@
 #define QR_CLIENT_HPP_
 
 #include <behaviortree_cpp/behavior_tree.h>
+#include <std_msgs/msg/int8.hpp>
 #include <rclcpp/rclcpp.hpp>
 
 #include "yacyac_interface/msg/qrcode.hpp"
@@ -25,6 +26,7 @@ public:
 private:
     rclcpp::Node::SharedPtr node_;
     rclcpp::Subscription<yacyac_interface::msg::Qrcode>::SharedPtr qr_sub_;
+    rclcpp::Publisher<std_msgs::msg::Int8>::SharedPtr mode_publisher_;
     double deadline_;
     std::vector<std::string> detected_QR_;
 

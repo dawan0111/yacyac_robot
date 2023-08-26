@@ -33,9 +33,9 @@ set(DEPENDENCIES
   rclcpp_action
   std_msgs
   geometry_msgs
-  nav2_behavior_tree
   nav2_msgs
   behaviortree_cpp
+  nav2_behavior_tree
   yacyac_interface
   ${OTHER_DEPS}
 )  
