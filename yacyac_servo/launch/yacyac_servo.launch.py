@@ -6,8 +6,8 @@ from launch_ros.actions import Node
 def generate_launch_description():
     servo_ctrl_node = Node(
         package='yacyac_servo',
-        executable='servo_ctrl',
-        name='servo_ctrl_node',
+        executable='action_servo_ctrl',
+        name='action_servo_ctrl_node',
         output='screen',
     )
     read_write_node = Node(
