@@ -30,7 +30,7 @@ class ServoCtrl(Node):
         self.cli = self.create_client(GetPosition, "/get_position")
         # tts client
         self.cli_io = self.create_client(TTS, "/yacyac/io")
-        self.req_io = GetPosition.Request()
+        self.req_io = TTS.Request()
         
         while not self.cli_io.wait_for_service(timeout_sec=1.0):
             self.get_logger().info("Service not available, waiting again...")
