@@ -366,7 +366,10 @@ export default function Display() {
           <div className="title">약 배급중...</div>
           <div className="progress-info">
             {totalPill}개중 {currentSupplyCount}개 완료 (
-            {((totalPill / currentSupplyCount) * 100).toFixed(2)}%)
+            {Boolean(currentSupplyCount)
+              ? ((currentSupplyCount / totalPill) * 100).toFixed(2)
+              : 0}
+            %)
           </div>
           <div className="animation">
             <Lottie animationData={pillAnimation} loop={true} />
@@ -374,7 +377,11 @@ export default function Display() {
           <div className="progress-bar">
             <Progress
               status="active"
-              percent={((totalPill / currentSupplyCount) * 100).toFixed(2)}
+              percent={
+                Boolean(currentSupplyCount)
+                  ? ((currentSupplyCount / totalPill) * 100).toFixed(2)
+                  : 0
+              }
               strokeColor={{ "0%": "#108ee9", "100%": "#87d068" }}
             />
           </div>
