@@ -1,10 +1,10 @@
 #include "nav2_client.cpp"
+#include "rclcpp/rclcpp.hpp"
+#include "rclcpp_action/rclcpp_action.hpp"
 #include "yac_supply_client.cpp"
 #include "yacyac_core/message.hpp"
 #include "yacyac_core/qr_client.hpp"
-
-#include "rclcpp/rclcpp.hpp"
-#include "rclcpp_action/rclcpp_action.hpp"
+#include "yacyac_core/supply_accept_client.hpp"
 #include <ament_index_cpp/get_package_share_directory.hpp>
 #include <behaviortree_cpp/bt_factory.h>
 #include <behaviortree_cpp/loggers/bt_cout_logger.h>
@@ -36,9 +36,9 @@ int main(int argc, char** argv)
     RCLCPP_INFO(nh->get_logger(), "Loading XML : %s", bt_xml.c_str());
     // factory.registerNodeType<Nav2Client>("Nav2Client");
     factory.registerNodeType<YacSupplyCilent>("YacSupplyCilent");
-    // std::cout << "둥" << std::endl;
-    // factory.registerNodeType<QRClient>("QRClient");
-    // factory.registerNodeType<Message>("Message");
+    factory.registerNodeType<QRClient>("QRClient");
+    factory.registerNodeType<Message>("Message");
+    factory.registerNodeType<SupplyAcceptClient>("SupplyAcceptClient");
 
     // Trees are created at deployment-time (i.e. at run-time, but only once at
     // the beginning). The currently supported format is XML. IMPORTANT: when the
