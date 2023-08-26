@@ -62,10 +62,10 @@ public:
         node_ = rclcpp::Node::make_shared("nav2_client");
         auto action_client = rclcpp_action::create_client<nav2_msgs::action::NavigateToPose>(node_, "navigate_to_pose");
 
-        auto mode_publisher = node_->create_publisher<std_msgs::msg::Int8>(mode_topic_name, rclcpp::QoS(1).best_effort());
+        auto mode_publisher = node_->create_publisher<std_msgs::msg::Int8>(mode_topic_name, rclcpp::QoS(1));
 
         auto message = std_msgs::msg::Int8();
-        message.data = 1;
+        message.data = 0;
 
         mode_publisher->publish(message);
         // if no server is present, fail after 5 seconds
