@@ -10,7 +10,6 @@
 
   <BehaviorTree ID="MainTree">
     <Sequence>
-      <Nav2Client goal="-1.0;-1.0;0.0;1.0"/>
       <Delay delay_msec="1000">
         <Sequence>
         
@@ -26,17 +25,31 @@
                          output_key="yac_b"/>
           <SetBlackboard value="0;0;0;0;0;0;6;0"
                          output_key="yac_c"/>
-          <Sequence>
 
-   
+            <ForceSuccess>
+              <Sequence>
+                <Nav2Client goal="{Goal_a}"/>
+                <QRClient />
+                <YacSupplyCilent goal="{yac_a}"/>
+              </Sequence>
+            </ForceSuccess>
 
-            <Nav2Client goal="{Goal_a}"/>
-            <YacSupplyCilent goal="{yac_a}"/>
-            <Nav2Client goal="{Goal_b}"/>
-            <YacSupplyCilent goal="{yac_b}"/>
-            <Nav2Client goal="{Goal_c}"/>
-            <YacSupplyCilent goal="{yac_c}"/>
-          </Sequence>
+            <ForceSuccess>
+              <Sequence>
+                <Nav2Client goal="{Goal_b}"/>
+                <QRClient />
+                <YacSupplyCilent goal="{yac_b}"/>
+              </Sequence>
+            </ForceSuccess>
+
+            <ForceSuccess>
+              <Sequence>
+                <Nav2Client goal="{Goal_c}"/>
+                <QRClient />
+                <YacSupplyCilent goal="{yac_c}"/>
+              </Sequence>
+            </ForceSuccess>
+            
         </Sequence>
       </Delay>
     </Sequence>
