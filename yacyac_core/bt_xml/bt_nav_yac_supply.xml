@@ -19,11 +19,11 @@
                          output_key="Goal_b"/>
           <SetBlackboard value="-1.588;1.253;0.0;1.0"
                          output_key="Goal_c"/>
-          <SetBlackboard value="6;0;0;0;0;0;0;0"
+          <SetBlackboard value="0;2;0;0;0;1;0;1"
                          output_key="yac_a"/>
-          <SetBlackboard value="0;0;0;0;6;0;0;0"
+          <SetBlackboard value="2;0;3;0;1;0;0;0"
                          output_key="yac_b"/>
-          <SetBlackboard value="0;0;0;0;0;0;6;0"
+          <SetBlackboard value="1;0;0;2;0;2;0;1"
                          output_key="yac_c"/>
 
             <ForceSuccess>
@@ -39,6 +39,7 @@
               <Sequence>
                 <!-- <Nav2Client goal="{Goal_b}"/> -->
                 <QRClient />
+                <SupplyAcceptClient />
                 <YacSupplyCilent goal="{yac_b}"/>
               </Sequence>
             </ForceSuccess>
@@ -47,6 +48,7 @@
               <Sequence>
                 <!-- <Nav2Client goal="{Goal_c}"/> -->
                 <QRClient />
+                <SupplyAcceptClient />
                 <YacSupplyCilent goal="{yac_c}"/>
               </Sequence>
             </ForceSuccess>

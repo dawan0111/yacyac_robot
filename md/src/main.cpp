@@ -329,7 +329,7 @@ void cmdVelCallBack(const geometry_msgs::msg::Twist::SharedPtr keyVel) // from t
     if (fgInitsetting == INIT_SETTING_STATE_OK) {
         velCmdUpdateCount++;
 
-        goal_cmd_speed = keyVel->linear.x;
+        goal_cmd_speed = keyVel->linear.x * -1;
         goal_cmd_ang_speed = keyVel->angular.z;
     }
     return;
