@@ -97,7 +97,7 @@ alias eb='nano ~/.bashrc'
 alias sb='source ~/.bashrc'
 alias gs='git status'
 alias gp='git pull'
-
+alias cool="sudo sh -c 'echo 100 > /sys/devices/pwm-fan/target_pwm'"
 alias gala="source /opt/ros/galactic/setup.bash; echo \"ROS2 galactic\""
 alias killgazebo="killall gzserver gzclient"
 alias ros_domain="export ROS_DOMAIN_ID=13"

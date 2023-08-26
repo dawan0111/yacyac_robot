@@ -6,15 +6,3 @@ on:
   pull_request:
     branches: [ main ]
   workflow_dispatch:
-
-jobs:
-  code-format:
-    name: python, c++ format
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout source code
-        uses: actions/checkout@v2
-        
-      - name: clang-format Check
-        uses: jidicula/clang-format-action@v4.11.0
-    
