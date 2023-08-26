@@ -19,6 +19,7 @@ from yacyac_interface.srv import TTS
 class SpeakTTS(Node):
     def __init__(self):
         super().__init__("yacyac_io")
+        self.is_speak = False
         self.srv = self.create_service(TTS, '/yacyac/io', self.callback_service)
         # Instantiates a client
         self.client = texttospeech.TextToSpeechClient()
@@ -39,18 +40,14 @@ class SpeakTTS(Node):
         text = str(response.tts_str_s)
         synthesis_input = texttospeech.SynthesisInput(text=text)
 
-        # Perform the text-to-speech request on the text input with the selected
-        # voice parameters and audio file type
         self.response = self.client.synthesize_speech(
             input=synthesis_input, voice=self.voice, audio_config=self.audio_config
         )
 
-        # The response's audio_content is binary.
         with open("output.mp3", "wb") as out:
-            # Write the response to the output file.
             out.write(self.response.audio_content)
-            print('Audio content written to file "output.mp3"')
-        playsound.playsound('output.mp3')     
+
+        playsound.playsound('output.mp3', block=False)
         return response
 
 
