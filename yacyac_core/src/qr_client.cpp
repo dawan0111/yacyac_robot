@@ -1,14 +1,6 @@
 #include "yacyac_core/qr_client.hpp"
 
-QRClient::QRClient(const std::string& name, const BT::NodeConfig& config) : BT::StatefulActionNode(name, config)
-{
-    node_ = rclcpp::Node::make_shared("qr_client");
-    const std::string QR_topic_name = "/qr_codes";
-    const std::string mode_topic_name = "/mode";
-    node_->create_subscription<yacyac_interface::msg::Qrcode>(QR_topic_name, rclcpp::QoS(1), std::bind(&QRClient::QR_callback_, this, std::placeholders::_1));
-
-    mode_publisher_ = node_->create_publisher<std_msgs::msg::Int8>(mode_topic_name, rclcpp::QoS(1));
-}
+QRClient::QRClient(const std::string& name, const BT::NodeConfig& config) : BT::StatefulActionNode(name, config) {}
 
 QRClient::~QRClient()
 {
@@ -17,7 +9,15 @@ QRClient::~QRClient()
 
 BT::NodeStatus QRClient::onStart()
 {
-    double life_time = rclcpp::Duration(3, 0).seconds();
+    node_ = rclcpp::Node::make_shared("qr_client");
+
+    const std::string QR_topic_name = "/qr_node";
+    const std::string mode_topic_name = "/mode";
+
+    qr_sub_ = node_->create_subscription<yacyac_interface::msg::Qrcode>(QR_topic_name, rclcpp::QoS(1), std::bind(&QRClient::QR_callback_, this, std::placeholders::_1));
+    mode_publisher_ = node_->create_publisher<std_msgs::msg::Int8>(mode_topic_name, rclcpp::QoS(1));
+
+    double life_time = rclcpp::Duration(30, 0).seconds();
     deadline_ = node_->get_clock()->now().seconds() + life_time;
 
     auto message = std_msgs::msg::Int8();
@@ -29,12 +29,13 @@ BT::NodeStatus QRClient::onStart()
 
 BT::NodeStatus QRClient::onRunning()
 {
-    // rclcpp::spin_some(node_);
+    rclcpp::spin_some(node_);
     if (node_->get_clock()->now().seconds() <= deadline_) {
         int8_t detected_QR_length = detected_QR_.size();
         // RCLCPP_INFO(node_->get_logger(), "detected qr length: %d", detected_QR_length);
 
         if (detected_QR_length == 1) {
+            setOutput("user_id", detected_QR_[0]);
             return BT::NodeStatus::SUCCESS;
         }
         else if (detected_QR_length > 1) {
@@ -52,7 +53,8 @@ void QRClient::onHalted()
     //   printf("[ QRClient: ABORTED ]");
 }
 
-void QRClient::QR_callback_(const yacyac_interface::msg::Qrcode::ConstSharedPtr& msg)
+void QRClient::QR_callback_(const yacyac_interface::msg::Qrcode& msg)
 {
-    detected_QR_ = msg->qr_infos;
+    // RCLCPP_INFO(node_->get_logger(), "detected qr length: %d", msg.qr_infos.size());
+    detected_QR_ = msg.qr_infos;
 }
