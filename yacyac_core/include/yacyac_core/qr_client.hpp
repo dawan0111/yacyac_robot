@@ -6,6 +6,7 @@
 #include <std_msgs/msg/int8.hpp>
 
 #include "yacyac_interface/msg/qrcode.hpp"
+#include "yacyac_interface/srv/tts.hpp"
 
 class QRClient : public BT::StatefulActionNode {
 public:
@@ -27,7 +28,9 @@ private:
     rclcpp::Node::SharedPtr node_;
     rclcpp::Subscription<yacyac_interface::msg::Qrcode>::SharedPtr qr_sub_;
     rclcpp::Publisher<std_msgs::msg::Int8>::SharedPtr mode_publisher_;
+    rclcpp::Client<yacyac_interface::srv::TTS>::SharedPtr TTS_client_;
     double deadline_;
+    int8_t prev_QR_length_;
     std::vector<std::string> detected_QR_;
 
     void QR_callback_(const yacyac_interface::msg::Qrcode& msg);
