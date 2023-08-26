@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 from google.cloud import texttospeech
-import os
 import playsound
 
 import rclpy as rp
@@ -38,7 +37,7 @@ class SpeakTTS(Node):
             out.write(self.response.audio_content)
 
         playsound.playsound('output.mp3', block=False)
-        
+
         return response
 
 
