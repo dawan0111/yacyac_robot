@@ -19,7 +19,7 @@ public:
 
         publisher_ = this->create_publisher<yacyac_interface::msg::Qrcode>(output, rclcpp::QoS(1));
 
-        timer_ = this->create_wall_timer(std::chrono::milliseconds(100), std::bind(&QrDetectorNode::publish_qr_, this));
+        timer_ = this->create_wall_timer(std::chrono::milliseconds(1000), std::bind(&QrDetectorNode::publish_qr_, this));
     }
 
 private:
