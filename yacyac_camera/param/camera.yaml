@@ -1,11 +1,12 @@
 camera_param:
-  top_camera:
-    node_name: yacyac_top_camera
-    device: /dev/video0
-    topic_name: /yacyac_top_camera
-    frame_width: 640
-    frame_height: 480
-  qr:
-    node_name: yacyac_qr_detector
-    camera_topic_name: /yacyac_top_camera
-    topic_name: /qr_node
+  ros__parameters:
+    top_camera:
+      node_name: yacyac_top_camera
+      device: /dev/video0
+      topic_name: /yacyac_top_camera
+      frame_width: 640
+      frame_height: 480
+    qr:
+      node_name: yacyac_qr_detector
+      camera_topic_name: /yacyac_top_camera
+      topic_name: /qr_node
