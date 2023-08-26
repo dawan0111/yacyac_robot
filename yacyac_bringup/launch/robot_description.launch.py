@@ -16,28 +16,22 @@ def generate_launch_description():
         PythonLaunchDescriptionSource(os.path.join(g2lidar_prefix, "launch", "ydlidar_launch.py"))
     )
 
-    # tracer mini package
     yacyac_prefix = get_package_share_directory("md")
     start_yacyac_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(yacyac_prefix, "launch", "md.launch.py"))
     )
 
-    # # tracer mini package
     yacyac_camera_prefix = get_package_share_directory("yacyac_camera")
     start_yacyac_camera_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(yacyac_camera_prefix, "launch", "camera.launch.py"))
     )
 
+
+
     # # rosbridge websocket cmd
     start_web_bridge_cmd = ExecuteProcess(
         cmd=["ros2", "launch", "rosbridge_server", "rosbridge_websocket_launch.xml"], output="screen"
     )
-
-    # start_insta360_cmd = ExecuteProcess(
-    #     cmd=["ros2", "run", "insta360_node", "insta360_node"], output="screen"
-    # )
-
-    # start_um7_cmd = ExecuteProcess(cmd=["ros2", "run", "um7", "um7_node"], output="screen")
 
     base_to_laser_publisher = ExecuteProcess(
         cmd=[
@@ -82,6 +76,13 @@ def generate_launch_description():
             start_g2lidar_cmd,
             start_yacyac_cmd,
             start_web_bridge_cmd,
-            start_yacyac_camera_cmd
+            start_yacyac_camera_cmd,
+            
+            Node(
+                package="yacyac_io",
+                executable="tts",
+                output="screen",
+                emulate_tty=True,
+            )
         ]
     )
