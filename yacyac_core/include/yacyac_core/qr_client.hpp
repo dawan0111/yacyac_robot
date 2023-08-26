@@ -2,8 +2,8 @@
 #define QR_CLIENT_HPP_
 
 #include <behaviortree_cpp/behavior_tree.h>
-#include <std_msgs/msg/int8.hpp>
 #include <rclcpp/rclcpp.hpp>
+#include <std_msgs/msg/int8.hpp>
 
 #include "yacyac_interface/msg/qrcode.hpp"
 
@@ -12,7 +12,7 @@ public:
     QRClient(const std::string& name, const BT::NodeConfig& config);
     ~QRClient();
 
-    static BT::PortsList providedPorts() { return {}; }
+    static BT::PortsList providedPorts() { return { BT::OutputPort<std::string>("user_id") }; }
 
     // this function is invoked once at the beginning.
     BT::NodeStatus onStart() override;
@@ -30,7 +30,7 @@ private:
     double deadline_;
     std::vector<std::string> detected_QR_;
 
-    void QR_callback_(const yacyac_interface::msg::Qrcode::ConstSharedPtr& msg);
+    void QR_callback_(const yacyac_interface::msg::Qrcode& msg);
 };
 
 #endif

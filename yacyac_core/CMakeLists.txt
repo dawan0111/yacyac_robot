@@ -46,6 +46,7 @@ add_library(
   src/qr_client.cpp
   src/message.cpp
   src/nav2_client.cpp
+  src/supply_accept_client.cpp
 )
 
 # send_goal

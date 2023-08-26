@@ -28,15 +28,16 @@
 
             <ForceSuccess>
               <Sequence>
-                <Nav2Client goal="{Goal_a}"/>
-                <QRClient />
+                <!-- <Nav2Client goal="{Goal_a}"/> -->
+                <QRClient user_id="{user_id}" />
+                <SupplyAcceptClient />
                 <YacSupplyCilent goal="{yac_a}"/>
               </Sequence>
             </ForceSuccess>
 
             <ForceSuccess>
               <Sequence>
-                <Nav2Client goal="{Goal_b}"/>
+                <!-- <Nav2Client goal="{Goal_b}"/> -->
                 <QRClient />
                 <YacSupplyCilent goal="{yac_b}"/>
               </Sequence>
@@ -44,7 +45,7 @@
 
             <ForceSuccess>
               <Sequence>
-                <Nav2Client goal="{Goal_c}"/>
+                <!-- <Nav2Client goal="{Goal_c}"/> -->
                 <QRClient />
                 <YacSupplyCilent goal="{yac_c}"/>
               </Sequence>
