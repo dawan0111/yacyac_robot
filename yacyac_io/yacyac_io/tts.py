@@ -38,6 +38,7 @@ class SpeakTTS(Node):
 
         # Set the text input to be synthesized
         text = str(response.tts_str_s)
+        print(text)
         synthesis_input = texttospeech.SynthesisInput(text=text)
 
         self.response = self.client.synthesize_speech(

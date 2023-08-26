@@ -8,9 +8,11 @@ from rclpy.action import ActionServer
 
 from yacyac_interface.msg import Servo
 from yacyac_interface.action import Supply as SupplyAction
+from yacyac_interface.srv import TTS
+#include "yacyac_interface/srv/tts.hpp"
 from dynamixel_sdk_custom_interfaces.msg import SetPosition
 from dynamixel_sdk_custom_interfaces.srv import GetPosition
-from std_msgs.msg import Int32 
+from std_msgs.msg import Int8
 
 # 목적 포지션을 받으면 그에 맞게 서보를 움직임
 # 목적 포지션에 도달하면 도착 메시지를 보냄
@@ -20,16 +22,21 @@ from std_msgs.msg import Int32
 class ServoCtrl(Node): 
     def __init__(self):
         super().__init__("servo_ctrl")
-        # 약 개수 입력받음 -> 이걸 서비스 콜로 받아야함
-        self._action_server = ActionServer(self, SupplyAction, "yacyac/supply_action", self.execute_callback)
+        # 약 개수 입력받음 
+        self._action_server = ActionServer(self, SupplyAction, "/yacyac/supply_action", self.execute_callback)
         # 해당 포지션으로 다이나믹셀의 포지션을 이동시킴
         self.pub = self.create_publisher(SetPosition, "/set_position", 20)
         # 현재 포지션을 서비스 클라이언트로 받아옴 
         self.cli = self.create_client(GetPosition, "/get_position")
+        # tts client
+        self.cli_io = self.create_client(TTS, "/yacyac/io")
+        self.req_io = GetPosition.Request()
+        
+        while not self.cli_io.wait_for_service(timeout_sec=1.0):
+            self.get_logger().info("Service not available, waiting again...")
 
-
-        # 현재 알약 배출개수 펍
-        self.pub_yac = self.create_publisher(Int32, "/yacyac/current_yac", 10)
+        # 현재 알약 배출개수 정보 pub
+        self.pub_yac = self.create_publisher(Int8, "/yacyac/supply/process", 10)
 
         self.cmd_pose_id = Servo()
         self.cnt = 0
@@ -69,8 +76,12 @@ class ServoCtrl(Node):
         print ("init positioning done!!!")
 
 
-    def execute_callback(self, goal_handle):
+    def execute_callback(self, goal_handle):  
         print('제조 정보를 입력 받았습니다...')
+        self.req_io.tts_str_t = '제조 정보를 입력 받았습니다'
+
+        future = self.cli_io.call_async(self.req_io)
+        rp.spin_until_future_complete(self, future)
 
         supply_list = list(goal_handle.request.yac_supply_list)
         print("약 제조 리스트")
@@ -87,8 +98,11 @@ class ServoCtrl(Node):
         print(yac_sum)
         result.sequence = int(yac_sum)
         print('총 ', yac_sum, '개의 약을 제조했습니다.')
-        # print('Result: {0}'.format(result.sequence))
 
+        self.req_io.tts_str_t = '제조가 완료 되었습니다.'
+
+        future = self.cli_io.call_async(self.req_io)
+        rp.spin_until_future_complete(self, future)
         return result
 
 
@@ -96,8 +110,6 @@ class ServoCtrl(Node):
     def init_position(self, id):
         req = GetPosition.Request()
         req.id = id
-        while not self.cli.wait_for_service(timeout_sec=1.0):
-            self.get_logger().info("Service not available, waiting again...")
 
         future = self.cli.call_async(req)
         rp.spin_until_future_complete(self, future)
@@ -171,7 +183,7 @@ class ServoCtrl(Node):
             yac_num -= 1
             yac_cnt += 1
             self.current_yac += 1
-            msg = Int32()
+            msg = Int8()
             msg.data = self.current_yac
             self.pub_yac.publish(msg)
             # yac_cnt 
