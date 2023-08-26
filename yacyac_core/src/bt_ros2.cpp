@@ -20,8 +20,8 @@ int main(int argc, char** argv)
 
     auto nh = rclcpp::Node::make_shared("yacyac_core");
     // nh->declare_parameter("bt_xml", "bt_nav_mememan.xml");
-    // nh->declare_parameter("bt_xml", "bt_yac_supply.xml");
-    nh->declare_parameter("bt_xml", "bt_nav_yac_supply.xml");
+    nh->declare_parameter("bt_xml", "bt_yac_supply.xml");
+    // nh->declare_parameter("bt_xml", "bt_nav_yac_supply.xml");
     std::string bt_xml;
     nh->get_parameter("bt_xml", bt_xml);
     bt_xml = packagePath + "/bt_xml/" + bt_xml;
@@ -33,11 +33,12 @@ int main(int argc, char** argv)
 
     BT::BehaviorTreeFactory factory;
 
-    // RCLCPP_INFO(nh->get_logger(), "Loading XML : %s", bt_xml.c_str());
-    factory.registerNodeType<Nav2Client>("Nav2Client");
+    RCLCPP_INFO(nh->get_logger(), "Loading XML : %s", bt_xml.c_str());
+    // factory.registerNodeType<Nav2Client>("Nav2Client");
     factory.registerNodeType<YacSupplyCilent>("YacSupplyCilent");
-    factory.registerNodeType<QRClient>("QRClient");
-    factory.registerNodeType<Message>("Message");
+    // std::cout << "둥" << std::endl;
+    // factory.registerNodeType<QRClient>("QRClient");
+    // factory.registerNodeType<Message>("Message");
 
     // Trees are created at deployment-time (i.e. at run-time, but only once at
     // the beginning). The currently supported format is XML. IMPORTANT: when the
