@@ -7,7 +7,7 @@ QRClient::QRClient(const std::string& name, const BT::NodeConfig& config) : BT::
     const std::string mode_topic_name = "/mode";
     node_->create_subscription<yacyac_interface::msg::Qrcode>(QR_topic_name, rclcpp::QoS(1), std::bind(&QRClient::QR_callback_, this, std::placeholders::_1));
 
-    mode_publisher_ = node_->create_publisher<std_msgs::msg::Int8>(mode_topic_name, rclcpp::QoS(1).best_effort());
+    mode_publisher_ = node_->create_publisher<std_msgs::msg::Int8>(mode_topic_name, rclcpp::QoS(1));
 }
 
 QRClient::~QRClient()

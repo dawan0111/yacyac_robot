@@ -15,7 +15,7 @@ public:
         RCLCPP_INFO(this->get_logger(), "QR DETECTOR NODE CREATE");
         scanner_.set_config(zbar::ZBAR_NONE, zbar::ZBAR_CFG_ENABLE, 1);
 
-        this->create_subscription<sensor_msgs::msg::Image>(input_topic_name, rclcpp::SensorDataQoS(), std::bind(&QrDetectorNode::image_callback_, this, std::placeholders::_1));
+        sub_ = this->create_subscription<sensor_msgs::msg::Image>(input_topic_name, rclcpp::SensorDataQoS(), std::bind(&QrDetectorNode::image_callback_, this, std::placeholders::_1));
 
         publisher_ = this->create_publisher<yacyac_interface::msg::Qrcode>(output, rclcpp::QoS(1));
 
@@ -31,11 +31,12 @@ private:
         publisher_->publish(message);
     }
 
-    void image_callback_(const sensor_msgs::msg::Image::ConstSharedPtr& msg)
+    void image_callback_(sensor_msgs::msg::Image::UniquePtr msg)
     {
         cv_bridge::CvImagePtr cv_ptr;
         try {
-            cv_ptr = cv_bridge::toCvCopy(msg, msg->encoding);
+
+            cv_ptr = cv_bridge::toCvCopy(std::move(msg), msg->encoding);
         }
         catch (cv_bridge::Exception& e) {
             RCLCPP_ERROR(this->get_logger(), "cv_bridge exception: %s", e.what());
