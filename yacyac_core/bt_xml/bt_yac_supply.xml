@@ -12,14 +12,14 @@
 
     <BehaviorTree ID="YacSupply">
         <Sequence>
-            <SetBlackboard output_key="Goal_a" value="6;0;0;0;0;0;0;0" />
+            <SetBlackboard output_key="Goal_a" value="6;0;0;0;0;0;3;0" />
             <SetBlackboard output_key="Goal_b" value="0;0;0;0;6;0;0;0" />
             <SetBlackboard output_key="Goal_c" value="0;0;0;0;0;0;6;0" />
         
             <Sequence name="SetGoal">
                 <YacSupplyCilent goal="{Goal_a}" />
-                <YacSupplyCilent goal="{Goal_b}" />
-                <YacSupplyCilent goal="{Goal_c}" />
+                <!-- <YacSupplyCilent goal="{Goal_b}" /> -->
+                <!-- <YacSupplyCilent goal="{Goal_c}" /> -->
             </Sequence>
         </Sequence>
     </BehaviorTree>
