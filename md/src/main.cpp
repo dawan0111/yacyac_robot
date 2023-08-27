@@ -329,7 +329,7 @@ void cmdVelCallBack(const geometry_msgs::msg::Twist::SharedPtr keyVel) // from t
     if (fgInitsetting == INIT_SETTING_STATE_OK) {
         velCmdUpdateCount++;
 
-        goal_cmd_speed = keyVel->linear.x * -1;
+        goal_cmd_speed = keyVel->linear.x;
         goal_cmd_ang_speed = keyVel->angular.z;
     }
     return;
@@ -380,7 +380,7 @@ int main(int argc, char** argv)
     node->declare_parameter("reduction", 1);
     node->declare_parameter("reverse_direction", 0);
     node->declare_parameter("maxrpm", 400);
-    node->declare_parameter("motor_posi", 0);
+    node->declare_parameter("motor_posi", 1);
     node->declare_parameter("encoder_PPR", 4096);
     node->declare_parameter("position_proportion_gain", 20);
     node->declare_parameter("speed_proportion_gain", 50);
@@ -579,6 +579,7 @@ void PubRobotPose(void)
 
         robot_pose.platform_state = temp.val;
     }
+    
 
     // robot_pose.battery_voltage = curr_pid_robot_monitor2.sVoltIn;
     // robot_pose.left_mot_current = curr_pid_pnt_main_data.current_id1;

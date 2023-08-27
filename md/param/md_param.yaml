@@ -7,7 +7,7 @@ md_ros2_param:
     reduction: 1 
     reverse_direction: 0
     maxrpm: 400
-    motor_posi: 0
+    motor_posi: 1
     encoder_PPR: 4096
     position_proportion_gain: 20
     speed_proportion_gain: 50

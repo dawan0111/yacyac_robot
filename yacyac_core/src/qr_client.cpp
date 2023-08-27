@@ -13,7 +13,7 @@ BT::NodeStatus QRClient::onStart()
 
     const std::string QR_topic_name = "/qr_node";
     const std::string mode_topic_name = "/mode";
-    const std::string TTS_service_name = "/yacyac/io";
+    const std::string TTS_service_name = "/yacyac/io"; 
 
     qr_sub_ = node_->create_subscription<yacyac_interface::msg::Qrcode>(QR_topic_name, rclcpp::QoS(1), std::bind(&QRClient::QR_callback_, this, std::placeholders::_1));
     mode_publisher_ = node_->create_publisher<std_msgs::msg::Int8>(mode_topic_name, rclcpp::QoS(1));

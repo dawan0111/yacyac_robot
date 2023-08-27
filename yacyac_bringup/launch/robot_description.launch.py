@@ -44,14 +44,14 @@ def generate_launch_description():
             "run",
             "tf2_ros",
             "static_transform_publisher",
+            "0.2",
             "0",
+            "0.18",
             "0",
-            "0.1",
-            "-3.141592",
             "0",
             "0",
             "base_link",
-            "laser",
+            "laser_frame",
         ],
         output="screen",
     )
@@ -85,6 +85,7 @@ def generate_launch_description():
             start_yacyac_servo_cmd,
             
             Node(
+                name="yacyac_io_node",
                 package="yacyac_io",
                 executable="tts",
                 output="screen",
