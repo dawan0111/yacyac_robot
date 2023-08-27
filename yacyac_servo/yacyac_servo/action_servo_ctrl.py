@@ -74,9 +74,9 @@ class ServoCtrl(Node):
         self.yac_cnt = 0
 
         print ("init positioning...")
-        for i in range(8):
+        # for i in range(8):
             # 근처 포지션으로 이동합니다.
-            self.init_position(i)
+            # self.init_position(i)
             # 원점 포지션으로 이동합니다. 
             # self.reset_position(i)
         print ("init positioning done!!!")
@@ -92,7 +92,6 @@ class ServoCtrl(Node):
         supply_list = list(goal_handle.request.yac_supply_list)
         print("약 제조 리스트")
         print("list : ", supply_list)
-        
         
         yac_sum = sum(supply_list)
         for idx in range(len(supply_list)):
@@ -111,6 +110,10 @@ class ServoCtrl(Node):
         future = self.cli_io.call_async(self.req_io)
         rp.spin_until_future_complete(self, future)
 
+        # send goal 다시 받기 위해 초기화
+        self._action_server = ActionServer(self, SupplyAction, "/yacyac/supply_action", self.execute_callback)
+        
+        
         return result
 
 
