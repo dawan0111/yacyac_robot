@@ -84,10 +84,10 @@ class ServoCtrl(Node):
 
     def execute_callback(self, goal_handle):  
         print('제조 정보를 입력 받았습니다...')
-        self.req_io.tts_str_t = '제조 정보를 입력 받았습니다'
+        # self.req_io.tts_str_t = '제조 정보를 입력 받았습니다'
 
-        future = self.cli_io.call_async(self.req_io)
-        rp.spin_until_future_complete(self, future)
+        # future = self.cli_io.call_async(self.req_io)
+        # rp.spin_until_future_complete(self, future)
 
         supply_list = list(goal_handle.request.yac_supply_list)
         print("약 제조 리스트")
@@ -105,14 +105,12 @@ class ServoCtrl(Node):
         result.sequence = int(yac_sum)
         print('총 ', yac_sum, '개의 약을 제조했습니다.')
 
-        self.req_io.tts_str_t = '제조가 완료 되었습니다.'
+        # self.req_io.tts_str_t = '제조가 완료 되었습니다.'
 
-        future = self.cli_io.call_async(self.req_io)
-        rp.spin_until_future_complete(self, future)
+        # future = self.cli_io.call_async(self.req_io)
+        # rp.spin_until_future_complete(self, future)
 
-        # send goal 다시 받기 위해 초기화
-        self._action_server = ActionServer(self, SupplyAction, "/yacyac/supply_action", self.execute_callback)
-        
+      
         
         return result
 
