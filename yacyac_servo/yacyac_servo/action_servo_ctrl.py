@@ -44,18 +44,24 @@ class ServoCtrl(Node):
         self.current_yac = 0
 
 
-        # 큰약
+        # 큰약 0, 1
         # 목적 포지션 list
         # 1023 to 300 degree
         # 시계방향으로 돌아가는 포지션 리스트
         self.big_position_set =  [0, 164, 328, 492, 656, 820] 
 
-        # 작은약
+        # 중간약 2, 3, 4
         # 목적 포지션 list
         # 1023 to 300 degree
         # 시계방향으로 돌아가는 포지션 리스트
-        self.small_position_set =  [60, 224, 388, 552, 716, 880] 
+        self.middle_position_set =  [60, 224, 388, 552, 716, 880] 
         # 반 시계방향으로 돌아가는 포지션 리스트 
+
+        # 작은약 5, 6, 7
+        # 목적 포지션 list
+        # 1023 to 300 degree
+        # 시계방향으로 돌아가는 포지션 리스트
+        self.small_position_set =  [140, 314, 478, 642, 806, 960]
 
         # 방향 flag
         self.position_flag = [0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -78,10 +84,10 @@ class ServoCtrl(Node):
 
     def execute_callback(self, goal_handle):  
         print('제조 정보를 입력 받았습니다...')
-        self.req_io.tts_str_t = '제조 정보를 입력 받았습니다'
+        # self.req_io.tts_str_t = '제조 정보를 입력 받았습니다'
 
-        future = self.cli_io.call_async(self.req_io)
-        rp.spin_until_future_complete(self, future)
+        # future = self.cli_io.call_async(self.req_io)
+        # rp.spin_until_future_complete(self, future)
 
         supply_list = list(goal_handle.request.yac_supply_list)
         print("약 제조 리스트")
@@ -99,10 +105,13 @@ class ServoCtrl(Node):
         result.sequence = int(yac_sum)
         print('총 ', yac_sum, '개의 약을 제조했습니다.')
 
-        self.req_io.tts_str_t = '제조가 완료 되었습니다.'
+        # self.req_io.tts_str_t = '제조가 완료 되었습니다.'
 
-        future = self.cli_io.call_async(self.req_io)
-        rp.spin_until_future_complete(self, future)
+        # future = self.cli_io.call_async(self.req_io)
+        # rp.spin_until_future_complete(self, future)
+
+      
+        
         return result
 
 
@@ -145,6 +154,28 @@ class ServoCtrl(Node):
                         self.position_cnt[id] = i 
                         break
    
+            elif  1 < id < 5 :
+                for i, val in enumerate(self.middle_position_set):
+                    diff = abs(response.position - val)
+                    if diff < min_diff:
+                        min_diff = diff
+                        closest_idx = i
+                        cmd_pose.position = self.middle_position_set[closest_idx]
+                        
+                if closest_idx > 3:
+                    self.position_flag[id] = 1
+                else:
+                    self.position_flag[id] = 0
+              
+                # print("ccw")
+                # 리스트의 요소값과 같은 값이 있으면 그 인덱스를 반환
+
+                for i, val in enumerate(self.middle_position_set):
+                    if val == cmd_pose.position:
+                        self.position_cnt[id] = i 
+                        break 
+
+
             else :
                 for i, val in enumerate(self.small_position_set):
                     diff = abs(response.position - val)
@@ -164,7 +195,7 @@ class ServoCtrl(Node):
                 for i, val in enumerate(self.small_position_set):
                     if val == cmd_pose.position:
                         self.position_cnt[id] = i 
-                        break 
+                        break
                 
             self.pub.publish(cmd_pose)
             # time.sleep(0.1)
@@ -227,8 +258,37 @@ class ServoCtrl(Node):
                         self.pub.publish(cmd_pose)
                     # print(self.position_cnt)
 
-
                         
+            elif 1 < id < 5:
+                print("중간약")
+                if self.position_flag[id] == 1:
+                    cmd_pose = SetPosition()
+                    self.position_cnt[id] += 1
+                    if self.position_cnt[id] == len(self.middle_position_set):
+                        self.position_cnt[id] = 4
+                        self.position_flag[id] = 0
+                        cmd_pose.position = self.middle_position_set[self.position_cnt[id]]
+                        cmd_pose.id = id
+                        self.pub.publish(cmd_pose)
+                    else:    
+                        cmd_pose.position = self.middle_position_set[self.position_cnt[id]]
+                        cmd_pose.id = id 
+                        self.pub.publish(cmd_pose)
+                    # print(self.position_cnt)
+                else :
+                    cmd_pose = SetPosition()
+                    self.position_cnt[id] -= 1
+                    if self.position_cnt[id] < 0:
+                        self.position_cnt[id] = 1
+                        self.position_flag[id] = 1
+                        cmd_pose.position = self.middle_position_set[self.position_cnt[id]]
+                        cmd_pose.id = id
+                        self.pub.publish(cmd_pose)
+                    else:    
+                        cmd_pose.position = self.middle_position_set[self.position_cnt[id]]
+                        cmd_pose.id = id 
+                        self.pub.publish(cmd_pose)
+                    # print(self.position_cnt)
             else:
                 print("작은약")
                 if self.position_flag[id] == 1:
@@ -259,7 +319,6 @@ class ServoCtrl(Node):
                         cmd_pose.id = id 
                         self.pub.publish(cmd_pose)
                     # print(self.position_cnt)
-                
             time.sleep(0.5)
         print(id, "번 약 배출이 완료되었습니다.")
 
@@ -269,7 +328,9 @@ class ServoCtrl(Node):
         cmd_pose.id = id
         if id < 2:
             cmd_pose.position = self.big_position_set[0]
-        else:   
+        elif 1 < id < 5:
+            cmd_pose.position = self.middle_position_set[0]
+        else:
             cmd_pose.position = self.small_position_set[0]
         self.pub.publish(cmd_pose)
 

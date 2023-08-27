@@ -20,7 +20,7 @@ int main(int argc, char** argv)
 
     auto nh = rclcpp::Node::make_shared("yacyac_core");
     // nh->declare_parameter("bt_xml", "bt_nav_mememan.xml");
-    nh->declare_parameter("bt_xml", "bt_nav_yac_supply.xml");
+    nh->declare_parameter("bt_xml", "bt_yac_supply.xml");
     // nh->declare_parameter("bt_xml", "bt_nav_yac_supply.xml");
     std::string bt_xml;
     nh->get_parameter("bt_xml", bt_xml);

@@ -10,6 +10,7 @@
 #include "behaviortree_cpp/action_node.h"
 #include "std_msgs/msg/header.hpp"
 #include "yacyac_interface/action/supply.hpp"
+#include "yacyac_interface/srv/tts.hpp"
 
 // Custom type
 struct YacSupplyList {
@@ -52,8 +53,11 @@ public:
 
     virtual BT::NodeStatus tick() override
     {
+
         std::cout << "yac supply client tick" << std::endl;
         node_ = rclcpp::Node::make_shared("yac_supply_client");
+        TTS_client_ = node_->create_client<yacyac_interface::srv::TTS>(TTS_service_name);
+
         auto action_client = rclcpp_action::create_client<yacyac_interface::action::Supply>(node_, "yacyac/supply_action");
         // if no server is present, fail after 5 seconds
         std::cout << "yac supply server wait" << std::endl;
@@ -79,6 +83,9 @@ public:
         auto goal_msg = yacyac_interface::action::Supply::Goal();
         // yacyac_interface::action::Supply goal_msg;
         //  msg->qr_infos
+        auto request = std::make_shared<yacyac_interface::srv::TTS::Request>();
+        request->tts_str_t = "약 제조중입니다";
+        auto result = TTS_client_->async_send_request(request);
         for (int i = 0; i < 8; i++) {
             goal_msg.yac_supply_list[i] = (goal.yac_supply_list[i]);
             std::cout << goal_msg.yac_supply_list[i] << " ";
@@ -121,7 +128,9 @@ public:
             RCLCPP_INFO(node_->get_logger(), "Yac supply aborted");
             return BT::NodeStatus::FAILURE;
         }
-
+        request = std::make_shared<yacyac_interface::srv::TTS::Request>();
+        request->tts_str_t = "약 제조가 완료되었습니다.";
+        result = TTS_client_->async_send_request(request);
         RCLCPP_INFO(node_->get_logger(), "Yac supply return received");
         return BT::NodeStatus::SUCCESS;
     }
@@ -131,4 +140,7 @@ private:
 
     // auto node_ = std::make_shared<rclcpp::Node>("nav2_client");
     rclcpp::Node::SharedPtr node_;
+    rclcpp::Client<yacyac_interface::srv::TTS>::SharedPtr TTS_client_;
+
+    const std::string TTS_service_name = "/yacyac/io";
 };
