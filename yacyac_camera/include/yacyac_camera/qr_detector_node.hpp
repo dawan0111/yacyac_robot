@@ -1,6 +1,8 @@
 #ifndef QR_DETECTOR_NODE_HPP_
 #define QR_DETECTOR_NODE_HPP_
+
 #include "yacyac_interface/msg/qrcode.hpp"
+#include "image_transport/image_transport.hpp"
 #include <cv_bridge/cv_bridge.h>
 #include <memory>
 #include <opencv2/opencv.hpp>
@@ -15,7 +17,10 @@ public:
         RCLCPP_INFO(this->get_logger(), "QR DETECTOR NODE CREATE");
         scanner_.set_config(zbar::ZBAR_NONE, zbar::ZBAR_CFG_ENABLE, 1);
 
-        sub_ = this->create_subscription<sensor_msgs::msg::Image>(input_topic_name, rclcpp::SensorDataQoS(), std::bind(&QrDetectorNode::image_callback_, this, std::placeholders::_1));
+        image_transport::ImageTransport it(std::shared_ptr<QrDetectorNode>(this, [](auto *) {}));
+        sub_ = it.subscribe(input_topic_name, 1, std::bind(&QrDetectorNode::image_callback_, this, std::placeholders::_1));
+
+        // sub_ = this->create_subscription<sensor_msgs::msg::Image>(input_topic_name, rclcpp::SensorDataQoS(), );
 
         publisher_ = this->create_publisher<yacyac_interface::msg::Qrcode>(output, rclcpp::QoS(1));
 
@@ -31,18 +36,19 @@ private:
         publisher_->publish(message);
     }
 
-    void image_callback_(sensor_msgs::msg::Image::UniquePtr msg)
+    void image_callback_(const sensor_msgs::msg::Image::ConstSharedPtr& msg)
     {
+        // RCLCPP_INFO(this->get_logger(), "IMAGE CALLBACK START");
         cv_bridge::CvImagePtr cv_ptr;
+        
         try {
-
-            cv_ptr = cv_bridge::toCvCopy(std::move(msg), msg->encoding);
+            cv_ptr = cv_bridge::toCvCopy(msg, msg->encoding);
         }
         catch (cv_bridge::Exception& e) {
             RCLCPP_ERROR(this->get_logger(), "cv_bridge exception: %s", e.what());
             return;
         }
-
+        // RCLCPP_INFO(this->get_logger(), "IMAGE CALLBACK");
         qr_detect_infos_ = getQRcodeInfo(cv_ptr->image);
     }
 
@@ -66,7 +72,7 @@ private:
         return qr_infos;
     };
     rclcpp::TimerBase::SharedPtr timer_;
-    rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr sub_;
+    image_transport::Subscriber sub_;
     rclcpp::Publisher<yacyac_interface::msg::Qrcode>::SharedPtr publisher_;
 
     zbar::ImageScanner scanner_;

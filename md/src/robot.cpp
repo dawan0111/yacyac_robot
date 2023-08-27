@@ -121,7 +121,7 @@ void CalRobotPoseFromRPM(PID_PNT_MAIN_DATA_t* pData)
     double robot_curr_theta;
 
     // auto curr_time = ros::Time::now();
-    auto curr_time = rclcpp::Clock{}.now();
+    auto curr_time = rclcpp::Clock().now();
 
     //----------------------------------------------------------------
     rpm_left = pData->rpm_id1;
@@ -183,6 +183,10 @@ void CalRobotPoseFromRPM(PID_PNT_MAIN_DATA_t* pData)
     robot_odom.pose.pose.orientation.y = quat.y();
     robot_odom.pose.pose.orientation.z = quat.z();
     robot_odom.pose.pose.orientation.w = quat.w();
+    
+    robot_odom.twist.twist.linear.x = pVelocity[0];
+    robot_odom.twist.twist.linear.y = 0.0;
+    robot_odom.twist.twist.angular.z = pVelocity[1];
 }
 
 void CalRobotPoseFromPos(PID_PNT_MAIN_DATA_t* pData)
@@ -210,7 +214,7 @@ void CalRobotPoseFromPos(PID_PNT_MAIN_DATA_t* pData)
     double angular_vel;
 
     // ros::Time curr_time = ros::Time::now();
-    auto curr_time = rclcpp::Clock{}.now();
+    auto curr_time = rclcpp::Clock().now();
 
     pos_left = pData->mtr_pos_id1;
     pos_right = pData->mtr_pos_id2;
@@ -276,6 +280,10 @@ void CalRobotPoseFromPos(PID_PNT_MAIN_DATA_t* pData)
     robot_odom.pose.pose.orientation.y = quat.y();
     robot_odom.pose.pose.orientation.z = quat.z();
     robot_odom.pose.pose.orientation.w = quat.w();
+    
+    robot_odom.twist.twist.linear.x = linear_vel;
+    robot_odom.twist.twist.linear.y = 0.0;
+    robot_odom.twist.twist.angular.z = angular_vel;
 }
 
 void CalRobotPose_old(PID_PNT_MAIN_DATA_t* pData)
@@ -295,7 +303,7 @@ void CalRobotPose_old(PID_PNT_MAIN_DATA_t* pData)
     double robot_curr_theta;
 
     // ros::Time curr_time = ros::Time::now();
-    auto curr_time = rclcpp::Clock{}.now();
+    auto curr_time = rclcpp::Clock().now();
 
     //----------------------------------------------------------------
     rpm_left = pData->rpm_id1;
@@ -364,4 +372,8 @@ void CalRobotPose_old(PID_PNT_MAIN_DATA_t* pData)
     robot_odom.pose.pose.orientation.y = quat.y();
     robot_odom.pose.pose.orientation.z = quat.z();
     robot_odom.pose.pose.orientation.w = quat.w();
+    
+    robot_odom.twist.twist.linear.x = pVelocity[0];
+    robot_odom.twist.twist.linear.y = 0.0;
+    robot_odom.twist.twist.angular.z = pVelocity[1];
 }

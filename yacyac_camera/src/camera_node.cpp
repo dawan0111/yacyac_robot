@@ -7,7 +7,7 @@ int main(int argc, char** argv)
 
     std::shared_ptr<CameraNode> camera_node = nullptr;
     try {
-        camera_node = std::make_shared<CameraNode>("/yacyac_camera", "camera_node", "/dev/video0");
+        camera_node = std::make_shared<CameraNode>("/yacyac_top_camera", "yacyac_top_camera", "/dev/video1");
     }
     catch (const std::exception& e) {
         fprintf(stderr, "%s Exiting..\n", e.what());

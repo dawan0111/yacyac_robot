@@ -36,12 +36,14 @@
             </ForceSuccess>
 
             <ForceSuccess>
-              <Sequence>
-                <!-- <Nav2Client goal="{Goal_b}"/> -->
-                <QRClient />
-                <SupplyAcceptClient />
-                <YacSupplyCilent goal="{yac_b}"/>
-              </Sequence>
+              <Delay delay_msec="10000">
+                <Sequence>
+                  <!-- <Nav2Client goal="{Goal_b}"/> -->
+                  <QRClient />
+                  <SupplyAcceptClient />
+                  <YacSupplyCilent goal="{yac_b}"/>
+                </Sequence>
+              </Delay>
             </ForceSuccess>
 
             <ForceSuccess>
