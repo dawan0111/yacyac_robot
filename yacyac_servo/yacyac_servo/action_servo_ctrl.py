@@ -74,9 +74,9 @@ class ServoCtrl(Node):
         self.yac_cnt = 0
 
         print ("init positioning...")
-        # for i in range(8):
+        for i in range(8):
             # 근처 포지션으로 이동합니다.
-            # self.init_position(i)
+            self.init_position(i)
             # 원점 포지션으로 이동합니다. 
             # self.reset_position(i)
         print ("init positioning done!!!")
