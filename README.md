@@ -1,9 +1,8 @@
 # YacYac Robot
-[![image.png](https://i.postimg.cc/Rh8DLRtS/image.png)](https://postimg.cc/GTFKcvzV)
-YACYAC is an innovative solution aimed at reducing the workload of nurses and ensuring precise medicine dispensing to enhance patient safety. This project was developed for the 21st Embedded Software Contest.
+[![Video Label](https://i.postimg.cc/Rh8DLRtS/image.png)](https://www.youtube.com/watch?v=_hdeFKSbxH8)
+( When you click on the image above, you can see the demo link. )
 
-## Demo
-https://www.youtube.com/watch?v=_hdeFKSbxH8
+YACYAC, an autonomous robot, effectively executes complex tasks using BehaviorTree algorithms. It reduces the workload of nurses and ensures patient safety, enhancing the efficiency of robotic operations in healthcare environments.
 
 ## HW architecture
 [![2023-ESWContest-1114-1.png](https://i.postimg.cc/Fz2LZdH5/2023-ESWContest-1114-1.png)](https://postimg.cc/kRvGM5Sf)
