@@ -1,5 +1,6 @@
 # YacYac Robot
 [![image.png](https://i.postimg.cc/Rh8DLRtS/image.png)](https://postimg.cc/GTFKcvzV)
+YACYAC is an innovative solution aimed at reducing the workload of nurses and ensuring precise medicine dispensing to enhance patient safety. This project was developed for the 21st Embedded Software Contest.
 
 ## Demo
 https://www.youtube.com/watch?v=_hdeFKSbxH8
