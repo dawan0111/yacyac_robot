@@ -1,8 +1,13 @@
 # YacYac Robot
+[![image.png](https://i.postimg.cc/Rh8DLRtS/image.png)](https://postimg.cc/GTFKcvzV)
 
-yacyac robot description
+## HW architecture
+[![2023-ESWContest-1114-1.png](https://i.postimg.cc/Fz2LZdH5/2023-ESWContest-1114-1.png)](https://postimg.cc/kRvGM5Sf)
 
-# Clone
+## SW architecture
+[![2023-ESWContest-1114-1.png](https://i.postimg.cc/FRXFDyjx/2023-ESWContest-1114-1.png)](https://postimg.cc/kVwd5tYV)
+
+## Clone
 
 This repository manages dependencies through submodules.
 
@@ -10,13 +15,13 @@ This repository manages dependencies through submodules.
 git clone --recursive https://github.com/dawan0111/yacyac.git
 ```
 
-# Dependence package install
+## Dependence package install
 
 ```bash
 sudo apt install libzbar-dev libzmq3-dev ros-${ROS_DISTRO}-rosbridge-server ros-${ROS_DISTRO}-image-transport ros-${ROS_DISTRO}-compressed-image-transport ros-${ROS_DISTRO}-cartographer-ros ros-${ROS_DISTRO}-nav2*
 ```
 
-# LiDAR SDK install
+## LiDAR SDK install
 
 ```bash
 cd ~/ros2_ws/src
@@ -31,14 +36,14 @@ sudo apt-get install python-pip
 cd .. && pip install .
 ```
 
-# GCP(Google Cloud Platform) TTS dependence install
+## GCP(Google Cloud Platform) TTS dependence install
 
 ```bash
 pip install --upgrade google-cloud-texttospeech
 pip install playsound
 ```
 
-# Setup USB rules
+## Setup USB rules
 
 ```bash
 sudo sh initenv.sh
