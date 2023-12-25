@@ -9,6 +9,8 @@ https://www.youtube.com/watch?v=_hdeFKSbxH8
 
 ## SW architecture
 [![2023-ESWContest-1114-1.png](https://i.postimg.cc/FRXFDyjx/2023-ESWContest-1114-1.png)](https://postimg.cc/kVwd5tYV)
+[![image.png](https://i.postimg.cc/yYrTWj4x/image.png)](https://postimg.cc/kBKSpx5P)
+
 
 ## Clone
 
